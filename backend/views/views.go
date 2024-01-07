@@ -74,6 +74,11 @@ func UpdateDeal(w http.ResponseWriter, r *http.Request) {
 		deal.LastUpvoteTime = time.Now()
 		db.Save(&deal)
 	}
+	if vote == "down" {
+		deal.Upvotes--
+		deal.LastUpvoteTime = time.Now()
+		db.Save(&deal)
+	}
 
 	var deals []models.Deal
 	db.Preload("Location").Find(&deals)
