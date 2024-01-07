@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 
 	"deals/models"
 
@@ -27,7 +28,15 @@ func main() {
 	r.HandleFunc("/deals", createDeal).Methods("POST")
 	r.HandleFunc("/deals/{id}", updateDeal).Methods("PUT")
 
-	handler := cors.Default().Handler(r)
+	corsOptions := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, // your website
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders: []string{"*"},
+	})
+
+	handler := corsOptions.Handler(r)
+
+	// handler := cors.Default().Handler(r)
 
 	serverAddress := ":8000"
 	log.Printf("Server starting on %s\n", serverAddress)
@@ -59,6 +68,7 @@ func updateDeal(w http.ResponseWriter, r *http.Request) {
 
 	if vote == "up" {
 		deal.Upvotes++
+		deal.LastUpvoteTime = time.Now()
 		db.Save(&deal)
 	}
 

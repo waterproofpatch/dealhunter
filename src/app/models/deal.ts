@@ -1,6 +1,7 @@
 import { Location } from "./location";
 
 export interface Deal {
+	ID: number
 	CreatedAt: string
 	Location: Location
 	RetailPrice: number

@@ -1,11 +1,13 @@
 <mat-card *ngIf="deal">
 	<mat-card-header>
-		<mat-card-title>Item: {{ deal.ItemName }}</mat-card-title>
+		<mat-card-title>{{deal.ID}}: Item: {{ deal.ItemName }}</mat-card-title>
 		<mat-card-subtitle>Store: {{ deal.StoreName }}</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
-		<p>Posted ({{getSecondsSinceCreation()}} minutes ago)</p>
-		<p>Upvotes: {{ deal.Upvotes }}
+		<p>Posted {{getSecondsSinceCreation()}} minutes ago</p>
+		<p>
+			<mat-icon (click)="dealsService.upvoteDeal(deal)">thumb_up</mat-icon>
+			{{ deal.Upvotes }}
 			<span *ngIf="deal.Upvotes > 0">({{getSecondsSinceLastUpvote()}} minutes ago)</span>
 		</p>
 		<p>Retail Price: {{ deal.RetailPrice }}</p>

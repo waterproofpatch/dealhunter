@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card'
 import { HttpClientModule } from '@angular/common/http';
 import { TruncatePipe } from './pipes/truncate-pipe';
+import { MatIconModule } from '@angular/material/icon'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +27,7 @@ import { DealComponent } from './deal/deal.component';
   ],
   imports: [
     HttpClientModule,
+    MatIconModule,
     BrowserModule,
     MatCardModule,
     AppRoutingModule,

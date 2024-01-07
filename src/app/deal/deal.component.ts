@@ -5,6 +5,7 @@ import moment from 'moment'
 
 import { Deal } from '../models/deal';
 import { LocationService } from '../location.service';
+import { DealsService } from '../deals.service';
 @Component({
   selector: 'app-deal',
   templateUrl: './deal.component.html',
@@ -13,7 +14,7 @@ import { LocationService } from '../location.service';
 export class DealComponent implements OnInit {
 
   @Input() deal: Deal | undefined
-  constructor(public locationService: LocationService) {
+  constructor(public locationService: LocationService, public dealsService: DealsService) {
 
   }
 

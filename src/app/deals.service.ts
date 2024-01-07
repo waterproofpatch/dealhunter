@@ -40,13 +40,13 @@ export class DealsService {
     return this.http.get(`${this.apiUrl}/deals`);
   }
 
-  private createDealHttp(deal: any): Observable<any> {
+  private createDealHttp(deal: Deal): Observable<any> {
     /* fill in location */
-    deal.location = this.locationService.location
+    deal.Location = this.locationService.location
     return this.http.post(`${this.apiUrl}/deals`, deal);
   }
-  private upvoteDealHttp(deal: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/deals/${deal.id}?vote=up`, {});
+  private upvoteDealHttp(deal: Deal): Observable<any> {
+    return this.http.put(`${this.apiUrl}/deals/${deal.ID}?vote=up`, {});
   }
 
 

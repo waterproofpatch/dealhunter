@@ -33,6 +33,7 @@ export class DealFormComponent {
           CreatedAt: "", // authoritative
           LastUpvoteTime: "", // authoritative
           Upvotes: 0, // authoritative
+          ID: 0, // authoritative
         })
       } else {
         console.log('storeName and itemName are required');
