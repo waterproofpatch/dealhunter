@@ -20,7 +20,7 @@ var db *gorm.DB
 func Init(_db *gorm.DB) *http.Handler {
 	db = _db
 	r := mux.NewRouter()
-	r.HandleFunc("/init-user", InitUser).Methods("GET")
+	r.HandleFunc("/user-meta", UserMeta).Methods("GET")
 	r.HandleFunc("/deals", GetDeals).Methods("GET")
 	r.HandleFunc("/deals", CreateDeal).Methods("POST")
 	r.HandleFunc("/deals/{id}", UpdateDeal).Methods("PUT")
@@ -41,7 +41,7 @@ func GetDeals(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(deals)
 }
 
-func InitUser(w http.ResponseWriter, r *http.Request) {
+func UserMeta(w http.ResponseWriter, r *http.Request) {
 	var userMeta models.UserMeta
 	bytes := make([]byte, 16) // generate 16 bytes
 	_, err := rand.Read(bytes)
