@@ -1,9 +1,8 @@
-<!-- app.component.html or your main component's template -->
 <mat-toolbar color="primary">
   <span style="flex: 1 1 auto;"></span>
-  <button mat-button [routerLink]="['/deal-form']">Deal Form</button>
-  <button mat-button [routerLink]="['/deals']">Deals</button>
+  <a mat-button [routerLink]="['/deal-form']" class="nav-link">Deal Form</a>
+  <a mat-button [routerLink]="['/deals']" class="nav-link">Deals</a>
 </mat-toolbar>
 
-<!-- Your router outlet -->
+
 <router-outlet></router-outlet>
