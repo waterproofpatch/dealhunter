@@ -4,6 +4,7 @@
 		<mat-card-subtitle>{{ deal.StoreName }}</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
+		<p>Created At: {{ deal.CreatedAt }}</p>
 		<p>Retail Price: {{ deal.RetailPrice }}</p>
 		<p>Actual Price: {{ deal.ActualPrice }}</p>
 		<p *ngIf="deal.Location">Location: {{ deal.Location.Latitude }}, {{ deal.Location.Longitude }}

@@ -1,6 +1,7 @@
 import { Location } from "./location";
 
 export interface Deal {
+	CreatedAt: string
 	Location: Location
 	RetailPrice: number
 	ActualPrice: number
