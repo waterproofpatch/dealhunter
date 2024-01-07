@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"deals/database"
 	"deals/views"
@@ -29,7 +30,12 @@ func main() {
 	// 	nil,
 	// 	"")
 
-	serverAddress := ":8000"
+	// serverAddress := ":8000"
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8000" // Provide a default value if no environment variable is set
+	}
+	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)
 	log.Fatal(http.ListenAndServe(serverAddress, *handler))
 }
