@@ -1,4 +1,6 @@
-<p>Location: Latitude: {{locationService.location.Latitude}}, Longitude: {{locationService.location.Longitude}}</p>
+<p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
+	{{locationService.location.Longitude | truncate}}
+</p>
 <div class="container" *ngFor="let deal of dealsService.getDeals() | async">
 	<app-deal [deal]="deal"></app-deal>
 </div>
