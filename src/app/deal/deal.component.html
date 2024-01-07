@@ -6,7 +6,7 @@
 	<mat-card-content>
 		<p>Retail Price: {{ deal.retailPrice }}</p>
 		<p>Actual Price: {{ deal.actualPrice }}</p>
-		<p>Location: {{ deal.location.latitude }}, {{ deal.location.longitude }}
+		<p *ngIf="deal.location">Location: {{ deal.location.latitude }}, {{ deal.location.longitude }}
 			({{locationService.calculateDistance(deal.location)}} miles away)</p>
 	</mat-card-content>
 </mat-card>

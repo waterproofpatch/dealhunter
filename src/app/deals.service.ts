@@ -35,6 +35,8 @@ export class DealsService {
   }
 
   private createDealHttp(deal: any): Observable<any> {
+    /* fill in location */
+    deal.location = this.locationService.location
     return this.http.post(`${this.apiUrl}/deals`, deal);
   }
 
