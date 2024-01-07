@@ -1,1 +1,11 @@
-<p>deal works!</p>
+<mat-card *ngIf="deal">
+	<mat-card-header>
+		<mat-card-title>{{ deal.itemName }}</mat-card-title>
+		<mat-card-subtitle>{{ deal.storeName }}</mat-card-subtitle>
+	</mat-card-header>
+	<mat-card-content>
+		<p>Retail Price: {{ deal.retailPrice }}</p>
+		<p>Actual Price: {{ deal.actualPrice }}</p>
+		<p>Location: {{ deal.location.latitude }}, {{ deal.location.longitude }}</p>
+	</mat-card-content>
+</mat-card>
