@@ -9,13 +9,27 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
+	"github.com/rs/cors"
 )
 
 var db *gorm.DB
 
 // init views handle to the db
-func Init(_db *gorm.DB) {
+func Init(_db *gorm.DB) *http.Handler {
 	db = _db
+	r := mux.NewRouter()
+	r.HandleFunc("/deals", GetDeals).Methods("GET")
+	r.HandleFunc("/deals", CreateDeal).Methods("POST")
+	r.HandleFunc("/deals/{id}", UpdateDeal).Methods("PUT")
+
+	corsOptions := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, // your website
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders: []string{"*"},
+	})
+
+	handler := corsOptions.Handler(r)
+	return &handler
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
