@@ -20,7 +20,7 @@ type Deal struct {
 	ActualPrice    float64
 	StoreName      string
 	ItemName       string
-	Upvotes        uint
+	Upvotes        int
 	LastUpvoteTime time.Time
 }
 
