@@ -16,6 +16,7 @@ export class UserService {
       this.userMeta$.next(userMeta)
     })
   }
+
   private getUserMetaHttp(): Observable<any> {
     return this.http.get(`${this.apiUrl}/user-meta`);
   }
