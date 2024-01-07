@@ -1,9 +1,11 @@
 package views
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -16,14 +18,23 @@ import (
 
 var db *gorm.DB
 
+func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		token := r.Header.Get("Authorization")
+		ctx := context.WithValue(r.Context(), "token", token)
+		h(w, r.WithContext(ctx))
+	}
+}
+
 // init views handle to the db
 func Init(_db *gorm.DB) *http.Handler {
 	db = _db
 	r := mux.NewRouter()
-	r.HandleFunc("/user-meta", UserMeta).Methods("GET")
-	r.HandleFunc("/deals", GetDeals).Methods("GET")
-	r.HandleFunc("/deals", CreateDeal).Methods("POST")
-	r.HandleFunc("/deals/{id}", UpdateDeal).Methods("PUT")
+
+	r.HandleFunc("/user-meta", TokenDecorator(UserMeta)).Methods("GET")
+	r.HandleFunc("/deals", TokenDecorator(GetDeals)).Methods("GET")
+	r.HandleFunc("/deals", TokenDecorator(CreateDeal)).Methods("POST")
+	r.HandleFunc("/deals/{id}", TokenDecorator(UpdateDeal)).Methods("PUT")
 
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // your website
@@ -36,6 +47,8 @@ func Init(_db *gorm.DB) *http.Handler {
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
+	token := r.Context().Value("token")
+	fmt.Printf("Token=%v", token)
 	var deals []models.Deal
 	db.Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
