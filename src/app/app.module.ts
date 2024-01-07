@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card'
 import { HttpClientModule } from '@angular/common/http';
+import { TruncatePipe } from './pipes/truncate-pipe';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +19,7 @@ import { DealComponent } from './deal/deal.component';
 @NgModule({
   declarations: [
     AppComponent,
+    TruncatePipe,
     DealFormComponent,
     DealsComponent,
     DealComponent

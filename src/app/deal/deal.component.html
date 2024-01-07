@@ -1,16 +1,18 @@
 <mat-card *ngIf="deal">
 	<mat-card-header>
-		<mat-card-title>{{ deal.ItemName }}</mat-card-title>
-		<mat-card-subtitle>{{ deal.StoreName }}</mat-card-subtitle>
+		<mat-card-title>Item: {{ deal.ItemName }}</mat-card-title>
+		<mat-card-subtitle>Store: {{ deal.StoreName }}</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
-		<p>Created At: {{ deal.CreatedAt }} ({{getSecondsSinceCreation()}} minutes ago)</p>
+		<p>Posted ({{getSecondsSinceCreation()}} minutes ago)</p>
 		<p>Upvotes: {{ deal.Upvotes }}
 			<span *ngIf="deal.Upvotes > 0">({{getSecondsSinceLastUpvote()}} minutes ago)</span>
 		</p>
 		<p>Retail Price: {{ deal.RetailPrice }}</p>
 		<p>Actual Price: {{ deal.ActualPrice }}</p>
-		<p *ngIf="deal.Location">Location: {{ deal.Location.Latitude }}, {{ deal.Location.Longitude }}
-			({{locationService.calculateDistance(deal.Location)}} miles away)</p>
+		<p *ngIf="deal.Location">Location - Lat: {{ deal.Location.Latitude | truncate }}, Lon: {{
+			deal.Location.Longitude | truncate
+			}}
+			({{locationService.calculateDistance(deal.Location) | truncate }} miles away)</p>
 	</mat-card-content>
 </mat-card>
