@@ -24,6 +24,12 @@ export class DealsService {
     })
   }
 
+  public upvoteDeal(deal: Deal) {
+    this.upvoteDealHttp(deal).subscribe((deals: Deal[]) => {
+      this.deals$.next(deals)
+    })
+  }
+
   public getDeals() {
     return this.deals$.pipe(
       map(deals => deals.sort((a, b) => this.locationService.calculateDistance(a.Location) - this.locationService.calculateDistance(b.Location)))
@@ -39,5 +45,9 @@ export class DealsService {
     deal.location = this.locationService.location
     return this.http.post(`${this.apiUrl}/deals`, deal);
   }
+  private upvoteDealHttp(deal: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/deals/${deal.id}?vote=up`, {});
+  }
+
 
 }
