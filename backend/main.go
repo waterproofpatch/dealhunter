@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"deals/models"
@@ -9,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/rs/cors"
 )
 
 var db *gorm.DB
@@ -23,7 +25,11 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/deals", getDeals).Methods("GET")
 	r.HandleFunc("/deals", createDeal).Methods("POST")
-	http.ListenAndServe(":8000", r)
+	handler := cors.Default().Handler(r)
+
+	serverAddress := ":8000"
+	log.Printf("Server starting on %s\n", serverAddress)
+	log.Fatal(http.ListenAndServe(serverAddress, handler))
 }
 
 func getDeals(w http.ResponseWriter, r *http.Request) {
