@@ -26,7 +26,7 @@ export class DealsService {
 
   public getDeals() {
     return this.deals$.pipe(
-      map(deals => deals.sort((a, b) => this.locationService.calculateDistance(a.location) - this.locationService.calculateDistance(b.location)))
+      map(deals => deals.sort((a, b) => this.locationService.calculateDistance(a.Location) - this.locationService.calculateDistance(b.Location)))
     );
   }
 

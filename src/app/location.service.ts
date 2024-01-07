@@ -5,7 +5,7 @@ import { Location } from './models/location';
   providedIn: 'root',
 })
 export class LocationService {
-  public location: Location = { latitude: 0, longitude: 0 }
+  public location: Location = { Latitude: 0, Longitude: 0 }
 
   constructor() {
     this.getLocation()
@@ -16,8 +16,8 @@ export class LocationService {
       navigator.geolocation.getCurrentPosition((position) => {
         const longitude = position.coords.longitude;
         const latitude = position.coords.latitude;
-        this.location.longitude = longitude;
-        this.location.latitude = latitude;
+        this.location.Longitude = longitude;
+        this.location.Latitude = latitude;
       });
     } else {
       console.log('No support for geolocation');
@@ -30,10 +30,10 @@ export class LocationService {
 
   public calculateDistance(location2: Location): number {
     const R = 3958.8; // Radius of the Earth in miles
-    const lat1 = this.toRadians(this.location.latitude);
-    const lon1 = this.toRadians(this.location.longitude);
-    const lat2 = this.toRadians(location2.latitude);
-    const lon2 = this.toRadians(location2.longitude);
+    const lat1 = this.toRadians(this.location.Latitude);
+    const lon1 = this.toRadians(this.location.Longitude);
+    const lat2 = this.toRadians(location2.Latitude);
+    const lon2 = this.toRadians(location2.Longitude);
 
     const dlon = lon2 - lon1;
     const dlat = lat2 - lat1;

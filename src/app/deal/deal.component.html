@@ -1,12 +1,12 @@
 <mat-card *ngIf="deal">
 	<mat-card-header>
-		<mat-card-title>{{ deal.itemName }}</mat-card-title>
-		<mat-card-subtitle>{{ deal.storeName }}</mat-card-subtitle>
+		<mat-card-title>{{ deal.ItemName }}</mat-card-title>
+		<mat-card-subtitle>{{ deal.StoreName }}</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
-		<p>Retail Price: {{ deal.retailPrice }}</p>
-		<p>Actual Price: {{ deal.actualPrice }}</p>
-		<p *ngIf="deal.location">Location: {{ deal.location.latitude }}, {{ deal.location.longitude }}
-			({{locationService.calculateDistance(deal.location)}} miles away)</p>
+		<p>Retail Price: {{ deal.RetailPrice }}</p>
+		<p>Actual Price: {{ deal.ActualPrice }}</p>
+		<p *ngIf="deal.Location">Location: {{ deal.Location.Latitude }}, {{ deal.Location.Longitude }}
+			({{locationService.calculateDistance(deal.Location)}} miles away)</p>
 	</mat-card-content>
 </mat-card>

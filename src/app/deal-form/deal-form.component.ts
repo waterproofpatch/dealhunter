@@ -25,11 +25,11 @@ export class DealFormComponent {
       console.log(this.dealForm.value);
       if (this.dealForm.controls.storeName.value && this.dealForm.controls.itemName.value) {
         this.dealsService.addDeal({
-          retailPrice: Number(this.dealForm.controls.retailPrice.value),
-          actualPrice: Number(this.dealForm.controls.actualPrice.value),
-          itemName: this.dealForm.controls.itemName.value,
-          storeName: this.dealForm.controls.storeName.value,
-          location: { latitude: 0, longitude: 0 }, // authoritative
+          RetailPrice: Number(this.dealForm.controls.retailPrice.value),
+          ActualPrice: Number(this.dealForm.controls.actualPrice.value),
+          ItemName: this.dealForm.controls.itemName.value,
+          StoreName: this.dealForm.controls.storeName.value,
+          Location: { Latitude: 0, Longitude: 0 }, // authoritative
         })
       } else {
         console.log('storeName and itemName are required');
