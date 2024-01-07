@@ -1,12 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 
+	"deals/database"
 	"deals/models"
+	"deals/views"
 
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
@@ -14,19 +14,20 @@ import (
 	"github.com/rs/cors"
 )
 
-var db *gorm.DB
-
 func main() {
+	db := database.GetDb()
 	db, _ = gorm.Open("sqlite3", "test.db")
 	defer db.Close()
 
 	db.AutoMigrate(&models.Deal{})
 	db.AutoMigrate(&models.Location{})
 
+	views.Init(db)
+
 	r := mux.NewRouter()
-	r.HandleFunc("/deals", getDeals).Methods("GET")
-	r.HandleFunc("/deals", createDeal).Methods("POST")
-	r.HandleFunc("/deals/{id}", updateDeal).Methods("PUT")
+	r.HandleFunc("/deals", views.GetDeals).Methods("GET")
+	r.HandleFunc("/deals", views.CreateDeal).Methods("POST")
+	r.HandleFunc("/deals/{id}", views.UpdateDeal).Methods("PUT")
 
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // your website
@@ -36,43 +37,7 @@ func main() {
 
 	handler := corsOptions.Handler(r)
 
-	// handler := cors.Default().Handler(r)
-
 	serverAddress := ":8000"
 	log.Printf("Server starting on %s\n", serverAddress)
 	log.Fatal(http.ListenAndServe(serverAddress, handler))
-}
-
-func getDeals(w http.ResponseWriter, r *http.Request) {
-	var deals []models.Deal
-	db.Preload("Location").Find(&deals)
-	json.NewEncoder(w).Encode(deals)
-}
-
-func createDeal(w http.ResponseWriter, r *http.Request) {
-	var deal models.Deal
-	_ = json.NewDecoder(r.Body).Decode(&deal)
-	db.Create(&deal)
-	var deals []models.Deal
-	db.Preload("Location").Find(&deals)
-	json.NewEncoder(w).Encode(deals)
-}
-
-func updateDeal(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id := params["id"]
-	vote := r.URL.Query().Get("vote")
-
-	var deal models.Deal
-	db.First(&deal, id)
-
-	if vote == "up" {
-		deal.Upvotes++
-		deal.LastUpvoteTime = time.Now()
-		db.Save(&deal)
-	}
-
-	var deals []models.Deal
-	db.Preload("Location").Find(&deals)
-	json.NewEncoder(w).Encode(deals)
 }
