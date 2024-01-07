@@ -23,3 +23,8 @@ type Deal struct {
 	Upvotes        uint
 	LastUpvoteTime time.Time
 }
+
+type UserMeta struct {
+	gorm.Model
+	Token string
+}

@@ -1,6 +1,8 @@
 package views
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"net/http"
 	"time"
@@ -18,6 +20,7 @@ var db *gorm.DB
 func Init(_db *gorm.DB) *http.Handler {
 	db = _db
 	r := mux.NewRouter()
+	r.HandleFunc("/init-user", InitUser).Methods("GET")
 	r.HandleFunc("/deals", GetDeals).Methods("GET")
 	r.HandleFunc("/deals", CreateDeal).Methods("POST")
 	r.HandleFunc("/deals/{id}", UpdateDeal).Methods("PUT")
@@ -36,6 +39,17 @@ func GetDeals(w http.ResponseWriter, r *http.Request) {
 	var deals []models.Deal
 	db.Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
+}
+
+func InitUser(w http.ResponseWriter, r *http.Request) {
+	var userMeta models.UserMeta
+	bytes := make([]byte, 16) // generate 16 bytes
+	_, err := rand.Read(bytes)
+	if err != nil {
+		panic(err)
+	}
+	userMeta.Token = hex.EncodeToString(bytes)
+	json.NewEncoder(w).Encode(userMeta)
 }
 
 func CreateDeal(w http.ResponseWriter, r *http.Request) {
