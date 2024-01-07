@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
-import { Location } from '../models/location';
+
+import moment from 'moment'
 
 import { Deal } from '../models/deal';
 import { LocationService } from '../location.service';
@@ -17,6 +18,19 @@ export class DealComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  public getSecondsSinceCreation(): number {
+    // const dateString = '2024-01-07T00:42:46.786403-05:00';
+    if (!this.deal) {
+      return 0
+    }
+    const dateString = this.deal.CreatedAt
+    const date = moment(dateString);
+    const now = moment();
+
+    const diffInMinutes = now.diff(date, 'minutes');
+    return diffInMinutes
   }
 
 }
