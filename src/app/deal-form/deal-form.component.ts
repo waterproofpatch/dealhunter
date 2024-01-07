@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DealsService } from '../deals.service';
 
@@ -15,7 +16,7 @@ export class DealFormComponent {
     itemName: new FormControl('', Validators.required),
   });
 
-  constructor(private dealsService: DealsService) {
+  constructor(private dealsService: DealsService, private router: Router) {
 
   }
 
@@ -33,6 +34,7 @@ export class DealFormComponent {
       } else {
         console.log('storeName and itemName are required');
       }
+      this.router.navigate(['/deals']);
     }
   }
 }
