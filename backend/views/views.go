@@ -27,7 +27,7 @@ func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
 }
 
 // init views handle to the db
-func Init(_db *gorm.DB) *http.Handler {
+func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 	db = _db
 	r := mux.NewRouter()
 
@@ -43,7 +43,7 @@ func Init(_db *gorm.DB) *http.Handler {
 	})
 
 	handler := corsOptions.Handler(r)
-	return &handler
+	return &handler, r
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {

@@ -5,7 +5,6 @@ import { UserService } from './user.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
-    // private userService: UserService
   ) {
   }
 

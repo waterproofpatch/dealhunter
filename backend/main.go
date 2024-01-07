@@ -16,7 +16,18 @@ func main() {
 
 	db := database.GetDb()
 
-	handler := views.Init(db)
+	handler, _ := views.Init(db)
+	// authentication.Init("someSecret",
+	// 	"someRefreshSecret",
+	// 	"defaultAdminEmail",
+	// 	"defaultAdminUsername",
+	// 	"defaultAdminPassword",
+	// 	router,
+	// 	"dbUrl",
+	// 	false,
+	// 	false,
+	// 	nil,
+	// 	"")
 
 	serverAddress := ":8000"
 	log.Printf("Server starting on %s\n", serverAddress)
