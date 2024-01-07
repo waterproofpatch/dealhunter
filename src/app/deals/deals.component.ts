@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Location } from '../models/location';
 import { DealsService } from '../deals.service';
+import { LocationService } from '../location.service';
 
 @Component({
   selector: 'app-deals',
@@ -9,24 +10,9 @@ import { DealsService } from '../deals.service';
   styleUrl: './deals.component.css'
 })
 export class DealsComponent implements OnInit {
-  location: Location = { latitude: 0, longitude: 0 }
-
-  constructor(public dealsService: DealsService) {
+  constructor(public dealsService: DealsService, public locationService: LocationService) {
 
   }
   ngOnInit(): void {
-    this.getLocation()
-  }
-  getLocation(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const longitude = position.coords.longitude;
-        const latitude = position.coords.latitude;
-        this.location.longitude = longitude
-        this.location.latitude = latitude
-      });
-    } else {
-      console.log("No support for geolocation")
-    }
   }
 }
