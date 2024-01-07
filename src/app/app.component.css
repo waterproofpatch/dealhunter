@@ -1,22 +1,13 @@
-.nav-link {
-	display: inline-block;
-	padding: 0.5em 1em;
-	text-decoration: none;
-	background-color: #f8f9fa;
-	color: #343a40;
-	border-radius: 0.25rem;
-	transition: background-color 0.3s ease;
+.logo {
+	font-size: 1.5em;
+	font-weight: bold;
 }
 
-.nav-link:hover {
-	background-color: #e2e6ea;
+.spacer {
+	flex: 1 1 auto;
 }
 
-.toolbar {
-	justify-content: flex-start;
-}
-
-.toolbar-button {
-	margin-right: 20px;
-	color: black;
+button {
+	margin-left: 20px;
+	color: white;
 }

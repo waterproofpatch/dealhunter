@@ -1,6 +1,10 @@
-<mat-toolbar color="primary" class="toolbar">
-  <a mat-button [routerLink]="['/deal-form']" class="nav-link toolbar-button">Deal Form</a>
-  <a mat-button [routerLink]="['/deals']" class="nav-link toolbar-button">Deals</a>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span class="logo">Your Logo</span>
+    <span class="spacer"></span>
+    <button mat-button [routerLink]="['/deal-form']">Deal Form</button>
+    <button mat-button [routerLink]="['/deals']">Deals</button>
+  </mat-toolbar-row>
 </mat-toolbar>
 
 <router-outlet></router-outlet>
