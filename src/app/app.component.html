@@ -1,8 +1,6 @@
-<mat-toolbar color="primary">
-  <span style="flex: 1 1 auto;"></span>
-  <a mat-button [routerLink]="['/deal-form']" class="nav-link">Deal Form</a>
-  <a mat-button [routerLink]="['/deals']" class="nav-link">Deals</a>
+<mat-toolbar color="primary" class="toolbar">
+  <a mat-button [routerLink]="['/deal-form']" class="nav-link toolbar-button">Deal Form</a>
+  <a mat-button [routerLink]="['/deals']" class="nav-link toolbar-button">Deals</a>
 </mat-toolbar>
-
 
 <router-outlet></router-outlet>
