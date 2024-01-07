@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Location } from '../models/location';
+import { DealsService } from '../deals.service';
 
 @Component({
   selector: 'app-deals',
@@ -10,6 +11,9 @@ import { Location } from '../models/location';
 export class DealsComponent implements OnInit {
   location: Location = { latitude: 0, longitude: 0 }
 
+  constructor(public dealsService: DealsService) {
+
+  }
   ngOnInit(): void {
     this.getLocation()
   }
