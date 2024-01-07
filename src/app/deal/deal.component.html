@@ -5,6 +5,9 @@
 	</mat-card-header>
 	<mat-card-content>
 		<p>Created At: {{ deal.CreatedAt }} ({{getSecondsSinceCreation()}} minutes ago)</p>
+		<p>Upvotes: {{ deal.Upvotes }}
+			<span *ngIf="deal.Upvotes > 0">({{getSecondsSinceLastUpvote()}} minutes ago)</span>
+		</p>
 		<p>Retail Price: {{ deal.RetailPrice }}</p>
 		<p>Actual Price: {{ deal.ActualPrice }}</p>
 		<p *ngIf="deal.Location">Location: {{ deal.Location.Latitude }}, {{ deal.Location.Longitude }}

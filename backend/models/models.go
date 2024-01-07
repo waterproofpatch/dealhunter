@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -12,10 +14,12 @@ type Location struct {
 
 type Deal struct {
 	gorm.Model
-	Location    Location `gorm:"foreignkey:LocationID"`
-	LocationID  uint
-	RetailPrice float64
-	ActualPrice float64
-	StoreName   string
-	ItemName    string
+	Location       Location `gorm:"foreignkey:LocationID"`
+	LocationID     uint
+	RetailPrice    float64
+	ActualPrice    float64
+	StoreName      string
+	ItemName       string
+	Upvotes        uint
+	LastUpvoteTime time.Time
 }

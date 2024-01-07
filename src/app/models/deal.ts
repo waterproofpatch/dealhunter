@@ -7,5 +7,7 @@ export interface Deal {
 	ActualPrice: number
 	StoreName: string
 	ItemName: string
+	Upvotes: number
+	LastUpvoteTime: string
 
 }

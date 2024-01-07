@@ -31,6 +31,8 @@ export class DealFormComponent {
           StoreName: this.dealForm.controls.storeName.value,
           Location: { Latitude: 0, Longitude: 0 }, // authoritative
           CreatedAt: "", // authoritative
+          LastUpvoteTime: "", // authoritative
+          Upvotes: 0, // authoritative
         })
       } else {
         console.log('storeName and itemName are required');
