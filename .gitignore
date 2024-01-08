@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 backend/test.db
 backend/test.db
+backend/deals
