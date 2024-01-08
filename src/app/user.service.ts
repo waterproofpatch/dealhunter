@@ -4,11 +4,13 @@ import { UserMeta } from './models/user-meta';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8000'; // replace with your API endpoint
+  private apiUrl = environment.apiUrl; // replace with your API endpoint
   public userMeta$: BehaviorSubject<UserMeta> = new BehaviorSubject<UserMeta>({ Token: "", CreatedAt: "", ID: 0 })
 
   constructor(private http: HttpClient) {

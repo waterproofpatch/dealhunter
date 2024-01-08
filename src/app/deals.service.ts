@@ -5,11 +5,13 @@ import { Observable, BehaviorSubject, map } from 'rxjs';
 import { Deal } from './models/deal';
 import { LocationService } from './location.service';
 
+import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class DealsService {
-  private apiUrl = 'http://localhost:8000'; // replace with your API endpoint
+  private apiUrl = environment.apiUrl; // replace with your API endpoint
   private deals$: BehaviorSubject<Deal[]> = new BehaviorSubject<Deal[]>([])
 
   constructor(private locationService: LocationService, private http: HttpClient) {
