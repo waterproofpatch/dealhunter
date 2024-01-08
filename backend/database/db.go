@@ -19,10 +19,10 @@ func GetDb() *gorm.DB {
 
 func Init() {
 	password := os.Getenv("DB_PASSWORD")
-	host := "postgresql-waterproofpatch.alwaysdata.net"
+	host := "postgresql-dealhunter.alwaysdata.net"
 	port := 5432
-	user := "waterproofpatch"
-	dbname := "waterproofpatch_deals_dev"
+	user := "dealhunter"
+	dbname := "dealhunter_deals_dev"
 
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
