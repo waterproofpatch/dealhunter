@@ -34,6 +34,7 @@ func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 	r.HandleFunc("/user-meta", TokenDecorator(UserMeta)).Methods("GET")
 	r.HandleFunc("/deals", TokenDecorator(GetDeals)).Methods("GET")
 	r.HandleFunc("/deals", TokenDecorator(CreateDeal)).Methods("POST")
+	r.HandleFunc("/deals/{id}", TokenDecorator(DeleteDeal)).Methods("DELETE")
 	r.HandleFunc("/deals/{id}", TokenDecorator(UpdateDeal)).Methods("PUT")
 
 	corsOptions := cors.New(cors.Options{
@@ -70,6 +71,17 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewDecoder(r.Body).Decode(&deal)
 	fmt.Printf("db=%v", db)
 	db.Create(&deal)
+	var deals []models.Deal
+	db.Preload("Location").Find(&deals)
+	json.NewEncoder(w).Encode(deals)
+}
+
+func DeleteDeal(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+	var deal models.Deal
+	db.First(&deal, id)
+	db.Delete(&deal)
 	var deals []models.Deal
 	db.Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)

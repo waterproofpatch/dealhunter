@@ -26,6 +26,12 @@ export class DealsService {
     })
   }
 
+  public deleteDeal(deal: Deal) {
+    this.deleteDealHttp(deal).subscribe((deals: Deal[]) => {
+      this.deals$.next(deals)
+    })
+  }
+
   public downvoteDeal(deal: Deal) {
     this.downvoteDealHttp(deal).subscribe((deals: Deal[]) => {
       this.deals$.next(deals)
@@ -57,6 +63,10 @@ export class DealsService {
   }
   private upvoteDealHttp(deal: Deal): Observable<any> {
     return this.http.put(`${this.apiUrl}/deals/${deal.ID}?vote=up`, {});
+  }
+  private deleteDealHttp(deal: Deal): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/deals/${deal.ID}`, {});
+
   }
 
 

@@ -8,6 +8,7 @@
 		<p>
 			<mat-icon (click)="dealsService.downvoteDeal(deal)">thumb_down</mat-icon>
 			<mat-icon (click)="dealsService.upvoteDeal(deal)">thumb_up</mat-icon>
+			<mat-icon (click)="dealsService.deleteDeal(deal)">delete</mat-icon>
 			{{ deal.Upvotes }}
 			<span *ngIf="deal.Upvotes > 0">({{getSecondsSinceLastUpvote()}} minutes ago)</span>
 		</p>
