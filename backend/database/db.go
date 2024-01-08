@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"deals/models"
 
 	"github.com/jinzhu/gorm"
@@ -13,7 +15,10 @@ func GetDb() *gorm.DB {
 }
 
 func Init() {
-	db, _ = gorm.Open("sqlite3", "test.db")
+	db, err := gorm.Open("sqlite3", "test2.db")
+	if err != nil {
+		fmt.Printf("Error opening database: %v", err)
+	}
 	db.AutoMigrate(&models.Deal{})
 	db.AutoMigrate(&models.Location{})
 }
