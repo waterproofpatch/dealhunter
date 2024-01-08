@@ -15,6 +15,7 @@ func main() {
 	defer database.DeInit()
 
 	db := database.GetDb()
+	fmt.Printf("Got db=%v", db)
 
 	handler, _ := views.Init(db)
 	// authentication.Init("someSecret",

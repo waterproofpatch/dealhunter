@@ -68,6 +68,7 @@ func UserMeta(w http.ResponseWriter, r *http.Request) {
 func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	var deal models.Deal
 	_ = json.NewDecoder(r.Body).Decode(&deal)
+	fmt.Printf("db=%v", db)
 	db.Create(&deal)
 	var deals []models.Deal
 	db.Preload("Location").Find(&deals)

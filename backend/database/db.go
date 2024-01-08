@@ -11,10 +11,10 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var gDb *gorm.DB
 
 func GetDb() *gorm.DB {
-	return db
+	return gDb
 }
 
 func Init() {
@@ -33,9 +33,10 @@ func Init() {
 	}
 	db.AutoMigrate(&models.Deal{})
 	db.AutoMigrate(&models.Location{})
+	gDb = db
 }
 
 func DeInit() {
-	_db, _ := db.DB()
-	_db.Close()
+	db, _ := gDb.DB()
+	db.Close()
 }
