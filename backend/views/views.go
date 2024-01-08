@@ -12,8 +12,8 @@ import (
 	"deals/models"
 
 	"github.com/gorilla/mux"
-	"github.com/jinzhu/gorm"
 	"github.com/rs/cors"
+	"gorm.io/gorm"
 )
 
 var db *gorm.DB
