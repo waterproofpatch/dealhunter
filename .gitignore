@@ -43,3 +43,4 @@ Thumbs.db
 backend/test.db
 backend/test.db
 backend/deals
+backend/secret.env
