@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -33,6 +34,7 @@ func main() {
 	// serverAddress := ":8000"
 	port := os.Getenv("PORT")
 	if port == "" {
+		fmt.Println("No port environment variable set, defaulting to 8000")
 		port = "8000" // Provide a default value if no environment variable is set
 	}
 	serverAddress := ":" + port
