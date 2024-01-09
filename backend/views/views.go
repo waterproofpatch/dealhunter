@@ -6,15 +6,27 @@ import (
 	"net/http"
 	"time"
 
+	"deals/database"
 	"deals/decorators"
 	"deals/models"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 var db *gorm.DB
+
+type SignUpRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type SignInRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
 
 // init views handle to the db
 func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
@@ -40,12 +52,70 @@ func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
+	db := database.GetDb() // db is a *gorm.DB object
+
+	var req SignUpRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Check if the user already exists
+	var user models.User
+	if err := db.Where("email = ?", req.Email).First(&user).Error; err == nil {
+		http.Error(w, "User already exists", http.StatusConflict)
+		return
+	}
+
+	// Hash and salt the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Create the new user
+	newUser := models.User{
+		Email:        req.Email,
+		PasswordHash: string(hashedPassword),
+		Reputation:   0,
+	}
+	if err := db.Create(&newUser).Error; err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// TODO: You might want to return a success message or the new user's ID
 }
 
 func SignOut(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
+	db := database.GetDb() // db is a *gorm.DB object
+
+	var req SignInRequest
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Find the user with the given email
+	var user models.User
+	if err := db.Where("email = ?", req.Email).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	// Compare the stored hashed password with the password provided by the user
+	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(req.Password)); err != nil {
+		http.Error(w, "Invalid password", http.StatusUnauthorized)
+		return
+	}
+
+	// TODO: If the password is correct, you might want to start a new session, return a success message, etc.
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
