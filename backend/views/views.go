@@ -33,9 +33,9 @@ func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 	r.HandleFunc("/deals", TokenDecorator(CreateDeal)).Methods("POST")
 	r.HandleFunc("/deals/{id}", TokenDecorator(DeleteDeal)).Methods("DELETE")
 	r.HandleFunc("/deals/{id}", TokenDecorator(UpdateDeal)).Methods("PUT")
-	r.HandleFunc("/auth/login", TokenDecorator(Login)).Methods("POST")
-	r.HandleFunc("/auth/logout", TokenDecorator(Logout)).Methods("POST")
-	r.HandleFunc("/auth/register", TokenDecorator(Register)).Methods("POST")
+	r.HandleFunc("/auth/signin", TokenDecorator(SignIn)).Methods("POST")
+	r.HandleFunc("/auth/logout", TokenDecorator(SignOut)).Methods("POST")
+	r.HandleFunc("/auth/signup", TokenDecorator(SignUp)).Methods("POST")
 
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // your website
@@ -47,13 +47,13 @@ func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 	return &handler, r
 }
 
-func Register(w http.ResponseWriter, r *http.Request) {
+func SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) {
+func SignOut(w http.ResponseWriter, r *http.Request) {
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {
+func SignIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
