@@ -1,37 +1,37 @@
 <!-- authentication.component.html -->
 <div class="form-container" *ngIf="mode === 'signin'">
-	<form class="auth-form">
+	<form class="auth-form" [formGroup]="signInForm" (ngSubmit)="onSubmit()">
 		<mat-form-field appearance="fill">
 			<mat-label>Email</mat-label>
-			<input matInput type="email" required>
+			<input matInput type="email" formControlName="email" required>
 		</mat-form-field>
 
 		<mat-form-field appearance="fill">
 			<mat-label>Password</mat-label>
-			<input matInput type="password" required>
+			<input matInput type="password" formControlName="password" required>
 		</mat-form-field>
 
-		<button mat-raised-button color="primary">Sign In</button>
+		<button mat-raised-button color="primary" type="submit">Sign In</button>
 	</form>
 </div>
 
 <div class="form-container" *ngIf="mode === 'signup'">
-	<form class="auth-form">
+	<form class="auth-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
 		<mat-form-field appearance="fill">
 			<mat-label>Email</mat-label>
-			<input matInput type="email" required>
+			<input matInput type="email" formControlName="email" required>
 		</mat-form-field>
 
 		<mat-form-field appearance="fill">
 			<mat-label>Password</mat-label>
-			<input matInput type="password" required>
+			<input matInput type="password" formControlName="password" required>
 		</mat-form-field>
 
 		<mat-form-field appearance="fill">
 			<mat-label>Confirm Password</mat-label>
-			<input matInput type="password" required>
+			<input matInput type="password" formControlName="confirmPassword" required>
 		</mat-form-field>
 
-		<button mat-raised-button color="primary">Sign Up</button>
+		<button mat-raised-button color="primary" type="submit">Sign Up</button>
 	</form>
 </div>
