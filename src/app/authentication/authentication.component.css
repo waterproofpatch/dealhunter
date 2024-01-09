@@ -1,0 +1,16 @@
+/* authentication.component.css */
+.form-container {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	/* Removed align-items: center; */
+}
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	/* Adjust as needed */
+	width: 50%;
+	/* Adjust as needed */
+}
