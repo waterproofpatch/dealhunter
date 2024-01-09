@@ -23,3 +23,8 @@ button {
 .container {
 	padding: 20px;
 }
+
+.toolbar-button {
+	color: black;
+	/* Or any color you prefer */
+}

@@ -2,8 +2,16 @@
   <mat-toolbar-row>
     <span class="logo">Deal Hunter</span>
     <span class="spacer"></span>
-    <button mat-button [routerLink]="['/deal-form']">Post New Deal</button>
-    <button mat-button [routerLink]="['/deals']">Deals</button>
+    <button mat-button [routerLink]="['/deal-form']" class="toolbar-button">Post New Deal</button>
+    <button mat-button [routerLink]="['/deals']" class="toolbar-button">Deals</button>
+    <span class="spacer"></span>
+    <button mat-button [matMenuTriggerFor]="profileMenu" class="toolbar-button">Profile</button>
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signup'}"
+        class="toolbar-button">Sign Up</button>
+      <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signin'}"
+        class="toolbar-button">Sign In</button>
+    </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>
 

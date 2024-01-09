@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu'
 import { AuthInterceptor } from './auth-interceptor.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +18,7 @@ import { AppComponent } from './app.component';
 import { DealFormComponent } from './deal-form/deal-form.component';
 import { DealsComponent } from './deals/deals.component';
 import { DealComponent } from './deal/deal.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 @NgModule({
   declarations: [
@@ -24,10 +26,12 @@ import { DealComponent } from './deal/deal.component';
     TruncatePipe,
     DealFormComponent,
     DealsComponent,
-    DealComponent
+    DealComponent,
+    AuthenticationComponent
   ],
   imports: [
     HttpClientModule,
+    MatMenuModule,
     MatIconModule,
     BrowserModule,
     MatCardModule,
