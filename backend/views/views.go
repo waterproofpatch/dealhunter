@@ -1,12 +1,12 @@
 package views
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
+	"deals/decorators"
 	"deals/models"
 
 	"github.com/gorilla/mux"
@@ -16,33 +16,18 @@ import (
 
 var db *gorm.DB
 
-func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		token := r.Header.Get("Authorization")
-		ctx := context.WithValue(r.Context(), "token", token)
-		h(w, r.WithContext(ctx))
-	}
-}
-
-func LogDecorator(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("Received a %s request at %s from %s\n", r.Method, r.URL.Path, r.RemoteAddr)
-		h(w, r)
-	}
-}
-
 // init views handle to the db
 func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 	db = _db
 	r := mux.NewRouter()
 
-	r.HandleFunc("/deals", LogDecorator(TokenDecorator(GetDeals))).Methods("GET")
-	r.HandleFunc("/deals", LogDecorator(CreateDeal)).Methods("POST")
-	r.HandleFunc("/deals/{id}", LogDecorator(TokenDecorator(DeleteDeal))).Methods("DELETE")
-	r.HandleFunc("/deals/{id}", LogDecorator(TokenDecorator(UpdateDeal))).Methods("PUT")
-	r.HandleFunc("/auth/signin", LogDecorator(SignIn)).Methods("POST")
-	r.HandleFunc("/auth/logout", LogDecorator(SignOut)).Methods("POST")
-	r.HandleFunc("/auth/signup", LogDecorator(SignUp)).Methods("POST")
+	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(GetDeals))).Methods("GET")
+	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(CreateDeal))).Methods("POST")
+	r.HandleFunc("/deals/{id}", decorators.LogDecorator(decorators.TokenDecorator(DeleteDeal))).Methods("DELETE")
+	r.HandleFunc("/deals/{id}", decorators.LogDecorator(decorators.TokenDecorator(UpdateDeal))).Methods("PUT")
+	r.HandleFunc("/auth/signin", decorators.LogDecorator(SignIn)).Methods("POST")
+	r.HandleFunc("/auth/logout", decorators.LogDecorator(SignOut)).Methods("POST")
+	r.HandleFunc("/auth/signup", decorators.LogDecorator(SignUp)).Methods("POST")
 
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // your website
