@@ -1,7 +1,6 @@
 <p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
 	{{locationService.location.Longitude | truncate}}
 </p>
-<p>Your random ID: {{(userService.userMeta$ | async)?.Token}}</p>
 <div class="container" *ngFor="let deal of dealsService.getDeals() | async">
 	<app-deal [deal]="deal"></app-deal>
 </div>

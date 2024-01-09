@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Location } from '../models/location';
 import { DealsService } from '../deals.service';
 import { LocationService } from '../location.service';
-import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-deals',
@@ -13,7 +11,6 @@ import { UserService } from '../user.service';
 export class DealsComponent implements OnInit {
   constructor(public dealsService: DealsService,
     public locationService: LocationService,
-    public userService: UserService,
   ) {
 
   }

@@ -18,19 +18,7 @@ func main() {
 	fmt.Printf("Got db=%v", db)
 
 	handler, _ := views.Init(db)
-	// authentication.Init("someSecret",
-	// 	"someRefreshSecret",
-	// 	"defaultAdminEmail",
-	// 	"defaultAdminUsername",
-	// 	"defaultAdminPassword",
-	// 	router,
-	// 	"dbUrl",
-	// 	false,
-	// 	false,
-	// 	nil,
-	// 	"")
 
-	// serverAddress := ":8000"
 	port := os.Getenv("PORT")
 	if port == "" {
 		fmt.Println("No port environment variable set, defaulting to 8000")

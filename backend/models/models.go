@@ -24,7 +24,9 @@ type Deal struct {
 	LastUpvoteTime time.Time
 }
 
-type UserMeta struct {
+type User struct {
 	gorm.Model
-	Token string
+	Email        string `json:"-"`
+	PasswordHash string `json:"-"`
+	Reputation   int
 }
