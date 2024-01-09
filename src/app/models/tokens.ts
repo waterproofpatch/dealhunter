@@ -1,5 +1,6 @@
 
-import * as jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+
 
 export class JwtAccessToken {
 	accessToken: string;
@@ -10,7 +11,8 @@ export class JwtAccessToken {
 
 	decodeToken() {
 		try {
-			const decodedToken = jwt_decode(this.accessToken);
+			// const decodedToken = jwt_decode(this.accessToken);
+			const decodedToken = jwtDecode(this.accessToken);
 			console.log(decodedToken);
 			return decodedToken;
 		} catch (error) {

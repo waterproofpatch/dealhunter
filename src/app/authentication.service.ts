@@ -2,9 +2,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BaseHttpService } from './base-http.service';
-
-import { User } from './models/user';
 import { BehaviorSubject, tap } from 'rxjs';
+
+import { JwtAccessToken } from './models/tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,12 @@ import { BehaviorSubject, tap } from 'rxjs';
 export class AuthenticationService extends BaseHttpService {
   private isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private rawToken: string | null = null
+  private jwtAccessToken$: BehaviorSubject<JwtAccessToken | null> = new BehaviorSubject<JwtAccessToken | null>(null)
 
-  constructor(private http: HttpClient) { super(); }
+  constructor(private http: HttpClient) {
+    super();
+    this.jwtAccessToken$.subscribe((x: JwtAccessToken | null) => { x?.decodeToken() })
+  }
 
   public getToken(): string | null {
     return this.rawToken
@@ -25,7 +29,9 @@ export class AuthenticationService extends BaseHttpService {
 
     return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
       tap(token => {
-        this.rawToken = token
+        this.rawToken = token.AccessToken
+        this.jwtAccessToken$.next(new JwtAccessToken(token.AccessToken))
+        console.log
         this.isAuthenticated$.next(true);
       })
     );
@@ -37,7 +43,8 @@ export class AuthenticationService extends BaseHttpService {
 
     return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
       tap(token => {
-        this.rawToken = token
+        this.rawToken = token.AccessToken
+        this.jwtAccessToken$.next(new JwtAccessToken(token.AccessToken))
         this.isAuthenticated$.next(true);
       })
     );
