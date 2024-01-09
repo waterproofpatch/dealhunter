@@ -10,34 +10,34 @@ import { BehaviorSubject, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthenticationService extends BaseHttpService {
-  private user: User | null = null;
   private isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private rawToken: string | null = null
 
   constructor(private http: HttpClient) { super(); }
 
-  public getUser(): User | null {
-    return this.user;
+  public getToken(): string | null {
+    return this.rawToken
   }
 
-  public signIn(email: string, password: string) {
+  public signIn(email: string | null, password: string | null) {
     // Replace with your actual sign-in API endpoint
     const url = '/auth/signin';
 
-    return this.http.post<User>(`${this.apiUrl}/${url}`, { email, password }).pipe(
-      tap(user => {
-        this.user = user;
+    return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
+      tap(token => {
+        this.rawToken = token
         this.isAuthenticated$.next(true);
       })
     );
   }
 
-  public signUp(email: string, password: string) {
+  public signUp(email: string | null, password: string | null) {
     // Replace with your actual sign-up API endpoint
     const url = '/auth/signup';
 
-    return this.http.post<User>(`${this.apiUrl}/${url}`, { email, password }).pipe(
-      tap(user => {
-        this.user = user;
+    return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
+      tap(token => {
+        this.rawToken = token
         this.isAuthenticated$.next(true);
       })
     );

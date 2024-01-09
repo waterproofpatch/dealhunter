@@ -45,6 +45,7 @@ func Init() error {
 func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Deal{})
 	db.AutoMigrate(&models.Location{})
+	db.AutoMigrate(&models.User{})
 }
 
 func DeInit() {
