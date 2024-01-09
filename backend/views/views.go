@@ -24,18 +24,25 @@ func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func LogDecorator(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("Received a %s request at %s from %s\n", r.Method, r.URL.Path, r.RemoteAddr)
+		h(w, r)
+	}
+}
+
 // init views handle to the db
 func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 	db = _db
 	r := mux.NewRouter()
 
-	r.HandleFunc("/deals", TokenDecorator(GetDeals)).Methods("GET")
-	r.HandleFunc("/deals", TokenDecorator(CreateDeal)).Methods("POST")
-	r.HandleFunc("/deals/{id}", TokenDecorator(DeleteDeal)).Methods("DELETE")
-	r.HandleFunc("/deals/{id}", TokenDecorator(UpdateDeal)).Methods("PUT")
-	r.HandleFunc("/auth/signin", TokenDecorator(SignIn)).Methods("POST")
-	r.HandleFunc("/auth/logout", TokenDecorator(SignOut)).Methods("POST")
-	r.HandleFunc("/auth/signup", TokenDecorator(SignUp)).Methods("POST")
+	r.HandleFunc("/deals", LogDecorator(TokenDecorator(GetDeals))).Methods("GET")
+	r.HandleFunc("/deals", LogDecorator(CreateDeal)).Methods("POST")
+	r.HandleFunc("/deals/{id}", LogDecorator(TokenDecorator(DeleteDeal))).Methods("DELETE")
+	r.HandleFunc("/deals/{id}", LogDecorator(TokenDecorator(UpdateDeal))).Methods("PUT")
+	r.HandleFunc("/auth/signin", LogDecorator(SignIn)).Methods("POST")
+	r.HandleFunc("/auth/logout", LogDecorator(SignOut)).Methods("POST")
+	r.HandleFunc("/auth/signup", LogDecorator(SignUp)).Methods("POST")
 
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"}, // your website
