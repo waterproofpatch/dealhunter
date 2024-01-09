@@ -1,6 +1,7 @@
 <p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
 	{{locationService.location.Longitude | truncate}}
 </p>
+<div *ngIf="dealsService.isLoading$ | async">Loading deals...</div>
 <div class="container" *ngFor="let deal of dealsService.getDeals() | async">
 	<app-deal [deal]="deal"></app-deal>
 </div>

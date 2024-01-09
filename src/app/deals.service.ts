@@ -6,15 +6,16 @@ import { Deal } from './models/deal';
 import { LocationService } from './location.service';
 
 import { environment } from '../environments/environment';
+import { BaseHttpService } from './base-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DealsService {
-  private apiUrl = environment.apiUrl; // replace with your API endpoint
+export class DealsService extends BaseHttpService {
   private deals$: BehaviorSubject<Deal[]> = new BehaviorSubject<Deal[]>([])
 
   constructor(private locationService: LocationService, private http: HttpClient) {
+    super()
     this.getDealsHttp().subscribe((deals: Deal[]) => {
       this.deals$.next(deals)
     })
