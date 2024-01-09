@@ -6,17 +6,23 @@ import (
 	"net/http"
 	"time"
 
-	"deals/database"
 	"deals/decorators"
+	"deals/environment"
 	"deals/models"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
+	"github.com/rs/zerolog"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var (
+	db     *gorm.DB
+	logger *zerolog.Logger
+	env    *environment.Environment
+)
 
 type SignUpRequest struct {
 	Email    string `json:"email"`
@@ -29,8 +35,9 @@ type SignInRequest struct {
 }
 
 // init views handle to the db
-func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
+func Init(_environment *environment.Environment, _db *gorm.DB, _logger *zerolog.Logger) (*http.Handler, *mux.Router) {
 	db = _db
+	logger = _logger
 	r := mux.NewRouter()
 
 	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(GetDeals))).Methods("GET")
@@ -52,8 +59,6 @@ func Init(_db *gorm.DB) (*http.Handler, *mux.Router) {
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
-	db := database.GetDb() // db is a *gorm.DB object
-
 	var req SignUpRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
@@ -85,13 +90,32 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	// Create a new token object, specifying signing method and the claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":    newUser.ID,
+		"email": newUser.Email,
+		"exp":   time.Now().Add(time.Minute * 10).Unix(),
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	accessTokenSigningKey := env.JWT_SIGNING_TOKEN
+	accessToken, err := token.SignedString([]byte(accessTokenSigningKey))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// Create a response object with the access token
+	response := models.JwtAccessToken{
+		AccessToken: accessToken,
+	}
+
+	// Convert the response object to JSON and write it to the response writer
+	json.NewEncoder(w).Encode(response)
 
 	// TODO: You might want to return a success message or the new user's ID
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
-	db := database.GetDb() // db is a *gorm.DB object
-
 	var req SignInRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {

@@ -1,3 +1,4 @@
+// see frontend 'models' folder
 package models
 
 import (
@@ -29,4 +30,8 @@ type User struct {
 	Email        string `json:"-"`
 	PasswordHash string `json:"-"`
 	Reputation   int
+}
+
+type JwtAccessToken struct {
+	AccessToken string
 }
