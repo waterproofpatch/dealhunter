@@ -16,30 +16,30 @@ export class DealsService extends BaseHttpService {
 
   constructor(private locationService: LocationService, private http: HttpClient) {
     super()
-    this.getDealsHttp().subscribe((deals: Deal[]) => {
+    this.withLoading(this.getDealsHttp()).subscribe((deals: Deal[]) => {
       this.deals$.next(deals)
     })
   }
 
   public addDeal(deal: Deal) {
-    this.createDealHttp(deal).subscribe((deals: Deal[]) => {
-      this.deals$.next(deals)
-    })
+    this.withLoading(this.createDealHttp(deal)).subscribe((deals: Deal[]) => {
+      this.deals$.next(deals);
+    });
   }
 
   public deleteDeal(deal: Deal) {
-    this.deleteDealHttp(deal).subscribe((deals: Deal[]) => {
+    this.withLoading(this.deleteDealHttp(deal)).subscribe((deals: Deal[]) => {
       this.deals$.next(deals)
     })
   }
 
   public downvoteDeal(deal: Deal) {
-    this.downvoteDealHttp(deal).subscribe((deals: Deal[]) => {
+    this.withLoading(this.downvoteDealHttp(deal)).subscribe((deals: Deal[]) => {
       this.deals$.next(deals)
     })
   }
   public upvoteDeal(deal: Deal) {
-    this.upvoteDealHttp(deal).subscribe((deals: Deal[]) => {
+    this.withLoading(this.upvoteDealHttp(deal)).subscribe((deals: Deal[]) => {
       this.deals$.next(deals)
     })
   }
