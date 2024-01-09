@@ -2,8 +2,9 @@ package decorators
 
 import (
 	"context"
-	"fmt"
 	"net/http"
+
+	"deals/logging"
 )
 
 func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
@@ -16,7 +17,14 @@ func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
 
 func LogDecorator(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("Received a %s request at %s from %s\n", r.Method, r.URL.Path, r.RemoteAddr)
+		// fmt.Printf("Received a %s request at %s from %s\n", r.Method, r.URL.Path, r.RemoteAddr)
+		logging.GetLogger().Info().
+			Str("method", r.Method).
+			Str("url", r.URL.Path).
+			Str("remoteAddr", r.RemoteAddr).
+			Msg("Received a request")
+
+		// logging.GetLogger().Info().Msg("Hello from Zerolog logger")
 		h(w, r)
 	}
 }

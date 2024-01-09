@@ -7,10 +7,12 @@ import (
 	"os"
 
 	"deals/database"
+	"deals/logging"
 	"deals/views"
 )
 
 func main() {
+	logging.Init()
 	database.Init()
 	defer database.DeInit()
 
