@@ -4,33 +4,47 @@ import (
 	"fmt"
 
 	"deals/environment"
+	"deals/logging"
 	"deals/models"
 
-	"github.com/rs/zerolog"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 var gDb *gorm.DB
 
-func Init(environment *environment.Environment, logger *zerolog.Logger) (*gorm.DB, error) {
-	password := environment.DB_PASSWORD
-	host := "postgresql-dealhunter.alwaysdata.net"
-	port := 5432
-	user := "dealhunter"
-	dbname := environment.DB_NAME
+func GetDb() *gorm.DB {
+	if gDb == nil {
+		panic("gDb is nil!")
+	}
+	return gDb
+}
 
-	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+func Init() error {
+	password := environment.GetEnvironment().DB_PASSWORD
+	host := environment.GetEnvironment().DB_HOST
+	port := environment.GetEnvironment().DB_PORT
+	user := environment.GetEnvironment().DB_USER
+	dbname := environment.GetEnvironment().DB_NAME
+
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		logger.Err(err)
-		return nil, err
+		logging.GetLogger().Error().Msg(err.Error())
+		return err
 	}
+
+	migrate(db)
+	gDb = db
+
+	return nil
+}
+
+func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Deal{})
 	db.AutoMigrate(&models.Location{})
-	return db, nil
 }
 
 func DeInit() {

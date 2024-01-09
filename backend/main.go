@@ -13,27 +13,27 @@ import (
 
 func main() {
 	// init logging library first
-	logger := logging.Init()
+	logging.Init()
 
 	// environment init
-	env, err := environment.Init()
+	err := environment.Init()
 	if err != nil {
-		logger.Err(err)
+		logging.GetLogger().Error().Msg(err.Error())
 		return
 	}
 
 	// init database library next
-	db, err := database.Init(env, logger)
+	err = database.Init()
 	if err != nil {
-		logger.Err(err)
+		logging.GetLogger().Error().Msg(err.Error())
 		return
 	}
 	defer database.DeInit()
 
 	// init views with the db
-	handler, _ := views.Init(env, db, logger)
+	handler, _ := views.Init()
 
-	port := env.PORT
+	port := environment.GetEnvironment().PORT
 	if port == "" {
 		fmt.Println("No port environment variable set, defaulting to 8000")
 		port = "8000" // Provide a default value if no environment variable is set

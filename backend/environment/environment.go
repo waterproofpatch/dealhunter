@@ -3,31 +3,47 @@ package environment
 import (
 	"errors"
 	"os"
+
+	"deals/logging"
 )
 
 type Environment struct {
-	JWT_SIGNING_TOKEN string
-	DB_NAME           string
-	DB_PASSWORD       string
-	PORT              string
+	JWT_SIGNING_KEY string
+	DB_NAME         string
+	DB_PASSWORD     string
+	DB_HOST         string
+	DB_USER         string
+	DB_PORT         string
+	PORT            string
 }
 
-func Init() (*Environment, error) {
-	jwtSigningToken := os.Getenv("JWT_SIGNING_TOKEN")
-	dbName := os.Getenv("DB_NAME")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	port := os.Getenv("PORT")
+var gEnv *Environment
 
-	if jwtSigningToken == "" || dbName == "" || dbPassword == "" || port == "" {
-		return nil, errors.New("Environment variables JWT_SIGNING_TOKEN, DB_NAME, or DB_PASSWORD are not set")
+func GetEnvironment() *Environment {
+	return gEnv
+}
+
+func Init() error {
+	var env Environment
+	envVars := map[string]*string{
+		"JWT_SIGNING_KEY": &env.JWT_SIGNING_KEY,
+		"DB_NAME":         &env.DB_NAME,
+		"DB_PASSWORD":     &env.DB_PASSWORD,
+		"DB_HOST":         &env.DB_HOST,
+		"DB_USER":         &env.DB_USER,
+		"DB_PORT":         &env.DB_PORT,
+		"PORT":            &env.PORT,
 	}
 
-	env := &Environment{
-		JWT_SIGNING_TOKEN: jwtSigningToken,
-		DB_NAME:           dbName,
-		DB_PASSWORD:       dbPassword,
-		PORT:              port,
+	for name, ptr := range envVars {
+		value := os.Getenv(name)
+		if value == "" {
+			logging.GetLogger().Debug().Msgf("Environment variable %s is not set", name)
+			return errors.New("Not all env set.")
+		}
+		*ptr = value
 	}
 
-	return env, nil
+	gEnv = &env
+	return nil
 }

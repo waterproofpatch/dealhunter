@@ -6,7 +6,12 @@ import (
 	"github.com/rs/zerolog"
 )
 
-func Init() *zerolog.Logger {
-	logger := zerolog.New(os.Stdout).With().Timestamp().Caller().Logger()
-	return &logger
+var gLogger zerolog.Logger
+
+func GetLogger() *zerolog.Logger {
+	return &gLogger
+}
+
+func Init() {
+	gLogger = zerolog.New(os.Stdout).With().Timestamp().Caller().Logger()
 }

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"deals/database"
 	"deals/decorators"
 	"deals/environment"
 	"deals/models"
@@ -13,15 +14,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
-	"github.com/rs/zerolog"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
-)
-
-var (
-	db     *gorm.DB
-	logger *zerolog.Logger
-	env    *environment.Environment
 )
 
 type SignUpRequest struct {
@@ -35,9 +28,7 @@ type SignInRequest struct {
 }
 
 // init views handle to the db
-func Init(_environment *environment.Environment, _db *gorm.DB, _logger *zerolog.Logger) (*http.Handler, *mux.Router) {
-	db = _db
-	logger = _logger
+func Init() (*http.Handler, *mux.Router) {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(GetDeals))).Methods("GET")
@@ -68,7 +59,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	// Check if the user already exists
 	var user models.User
-	if err := db.Where("email = ?", req.Email).First(&user).Error; err == nil {
+	if err := database.GetDb().Where("email = ?", req.Email).First(&user).Error; err == nil {
 		http.Error(w, "User already exists", http.StatusConflict)
 		return
 	}
@@ -86,7 +77,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		PasswordHash: string(hashedPassword),
 		Reputation:   0,
 	}
-	if err := db.Create(&newUser).Error; err != nil {
+	if err := database.GetDb().Create(&newUser).Error; err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -98,7 +89,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
-	accessTokenSigningKey := env.JWT_SIGNING_TOKEN
+	accessTokenSigningKey := environment.GetEnvironment().JWT_SIGNING_KEY
 	accessToken, err := token.SignedString([]byte(accessTokenSigningKey))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -125,7 +116,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	// Find the user with the given email
 	var user models.User
-	if err := db.Where("email = ?", req.Email).First(&user).Error; err != nil {
+	if err := database.GetDb().Where("email = ?", req.Email).First(&user).Error; err != nil {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
@@ -146,17 +137,16 @@ func GetDeals(w http.ResponseWriter, r *http.Request) {
 	token := r.Context().Value("token")
 	fmt.Printf("Token=%v", token)
 	var deals []models.Deal
-	db.Preload("Location").Find(&deals)
+	database.GetDb().Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
 
 func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	var deal models.Deal
 	_ = json.NewDecoder(r.Body).Decode(&deal)
-	fmt.Printf("db=%v", db)
-	db.Create(&deal)
+	database.GetDb().Create(&deal)
 	var deals []models.Deal
-	db.Preload("Location").Find(&deals)
+	database.GetDb().Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
 
@@ -164,10 +154,10 @@ func DeleteDeal(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
 	var deal models.Deal
-	db.First(&deal, id)
-	db.Delete(&deal)
+	database.GetDb().First(&deal, id)
+	database.GetDb().Delete(&deal)
 	var deals []models.Deal
-	db.Preload("Location").Find(&deals)
+	database.GetDb().Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
 
@@ -177,20 +167,20 @@ func UpdateDeal(w http.ResponseWriter, r *http.Request) {
 	vote := r.URL.Query().Get("vote")
 
 	var deal models.Deal
-	db.First(&deal, id)
+	database.GetDb().First(&deal, id)
 
 	if vote == "up" {
 		deal.Upvotes++
 		deal.LastUpvoteTime = time.Now()
-		db.Save(&deal)
+		database.GetDb().Save(&deal)
 	}
 	if vote == "down" {
 		deal.Upvotes--
 		deal.LastUpvoteTime = time.Now()
-		db.Save(&deal)
+		database.GetDb().Save(&deal)
 	}
 
 	var deals []models.Deal
-	db.Preload("Location").Find(&deals)
+	database.GetDb().Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
