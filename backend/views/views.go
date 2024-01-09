@@ -8,10 +8,10 @@ import (
 
 	"deals/database"
 	"deals/decorators"
-	"deals/environment"
+	"deals/logging"
 	"deals/models"
+	"deals/tokens"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"golang.org/x/crypto/bcrypt"
@@ -81,20 +81,9 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// Create a new token object, specifying signing method and the claims
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":    newUser.ID,
-		"email": newUser.Email,
-		"exp":   time.Now().Add(time.Minute * 10).Unix(),
-	})
 
-	// Sign and get the complete encoded token as a string using the secret
-	accessTokenSigningKey := environment.GetEnvironment().JWT_SIGNING_KEY
-	accessToken, err := token.SignedString([]byte(accessTokenSigningKey))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	accessToken := tokens.GenerateAccessToken(newUser)
+	logging.GetLogger().Debug().Msgf("Generated access token: %v", accessToken)
 	// Create a response object with the access token
 	response := models.JwtAccessToken{
 		AccessToken: accessToken,
@@ -102,8 +91,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	// Convert the response object to JSON and write it to the response writer
 	json.NewEncoder(w).Encode(response)
-
-	// TODO: You might want to return a success message or the new user's ID
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
@@ -127,7 +114,15 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: If the password is correct, you might want to start a new session, return a success message, etc.
+	accessToken := tokens.GenerateAccessToken(user)
+	logging.GetLogger().Debug().Msgf("Generated access token: %v", accessToken)
+	// Create a response object with the access token
+	response := models.JwtAccessToken{
+		AccessToken: accessToken,
+	}
+
+	// Convert the response object to JSON and write it to the response writer
+	json.NewEncoder(w).Encode(response)
 }
 
 func SignOut(w http.ResponseWriter, r *http.Request) {
