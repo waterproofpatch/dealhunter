@@ -89,9 +89,6 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	// TODO: You might want to return a success message or the new user's ID
 }
 
-func SignOut(w http.ResponseWriter, r *http.Request) {
-}
-
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	db := database.GetDb() // db is a *gorm.DB object
 
@@ -116,6 +113,9 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: If the password is correct, you might want to start a new session, return a success message, etc.
+}
+
+func SignOut(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
