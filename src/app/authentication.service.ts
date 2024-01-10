@@ -12,7 +12,7 @@ import { JwtAccessToken } from './models/tokens';
 export class AuthenticationService extends BaseHttpService {
   private isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private rawToken: string | null = null
-  private jwtAccessToken$: BehaviorSubject<JwtAccessToken | null> = new BehaviorSubject<JwtAccessToken | null>(null)
+  public jwtAccessToken$: BehaviorSubject<JwtAccessToken | null> = new BehaviorSubject<JwtAccessToken | null>(null)
 
   constructor(private http: HttpClient) {
     super();
