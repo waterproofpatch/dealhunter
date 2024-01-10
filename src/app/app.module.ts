@@ -19,6 +19,7 @@ import { DealFormComponent } from './deal-form/deal-form.component';
 import { DealsComponent } from './deals/deals.component';
 import { DealComponent } from './deal/deal.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AuthenticationComponent } from './authentication/authentication.compone
     DealFormComponent,
     DealsComponent,
     DealComponent,
-    AuthenticationComponent
+    AuthenticationComponent,
+    ProfileComponent
   ],
   imports: [
     HttpClientModule,

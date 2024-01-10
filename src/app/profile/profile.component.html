@@ -1,0 +1,11 @@
+<mat-card class="container" *ngIf="(authenticationService.jwtAccessToken$ | async) as token">
+	<mat-card-header>
+		<mat-card-title>User Profile</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<p><strong>Email:</strong> {{token.email}}</p>
+		<p><strong>ID:</strong> {{token.id}}</p>
+		<p><strong>Expired:</strong> {{token.isExpired()}}</p>
+		<p><strong>Expires in:</strong> {{token.secondsUntilExpiration()}} seconds</p>
+	</mat-card-content>
+</mat-card>

@@ -5,9 +5,11 @@
     <button mat-button [routerLink]="['/deal-form']" class="toolbar-button">Post New Deal</button>
     <button mat-button [routerLink]="['/deals']" class="toolbar-button">Deals</button>
     <span class="spacer"></span>
-    <button mat-button [matMenuTriggerFor]="profileMenu" class="toolbar-button">Profile</button>
+    <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="toolbar-button">
+      <mat-icon>account_circle</mat-icon>
+    </button>
     <mat-menu #profileMenu="matMenu">
-      <button mat-menu-item [routerLink]="['/my-profile']" *ngIf="authenticationService.isAuthenticated$ | async"
+      <button mat-menu-item [routerLink]="['/profile']" *ngIf="authenticationService.isAuthenticated$ | async"
         class="toolbar-button">My Profile</button>
       <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signup'}"
         *ngIf="!(authenticationService.isAuthenticated$ | async)" class="toolbar-button">Sign Up</button>
@@ -20,6 +22,6 @@
 <router-outlet></router-outlet>
 <footer class="footer">
   <div class="container">
-    <p class="text-muted">Your footer content here.</p>
+    <p class="text-muted">Dealhuntr - help deal hunters land great deals</p>
   </div>
 </footer>
