@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"deals/cookies"
 	"deals/database"
 	"deals/decorators"
 	"deals/logging"
@@ -82,9 +83,17 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// mint some tokens
 	accessToken := tokens.GenerateAccessToken(newUser)
 	logging.GetLogger().Debug().Msgf("Generated access token: %v", accessToken)
-	// Create a response object with the access token
+
+	refreshToken := tokens.GenerateRefrehToken(newUser)
+	logging.GetLogger().Debug().Msgf("Generated refresh token: %v", refreshToken)
+
+	cookie := cookies.SetRefreshTokenCookie(refreshToken)
+	http.SetCookie(w, cookie)
+	logging.GetLogger().Debug().Msgf("set refreshToken cookie")
+
 	response := models.JwtAccessToken{
 		AccessToken: accessToken,
 	}
@@ -116,7 +125,14 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	accessToken := tokens.GenerateAccessToken(user)
 	logging.GetLogger().Debug().Msgf("Generated access token: %v", accessToken)
-	// Create a response object with the access token
+
+	refreshToken := tokens.GenerateRefrehToken(user)
+	logging.GetLogger().Debug().Msgf("Generated refresh token: %v", refreshToken)
+
+	cookie := cookies.SetRefreshTokenCookie(refreshToken)
+	http.SetCookie(w, cookie)
+	logging.GetLogger().Debug().Msgf("set refreshToken cookie")
+
 	response := models.JwtAccessToken{
 		AccessToken: accessToken,
 	}
