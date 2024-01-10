@@ -36,15 +36,13 @@ export class AuthenticationComponent implements OnInit {
   onSubmit() {
     if (this.mode === 'signin' && this.signInForm.valid) {
       // Handle sign in
-      console.log('Sign in:', this.signInForm.value);
       this.authenticationService.signIn(this.signInForm.controls.email.value, this.signInForm.controls.password.value).subscribe((token: any) => {
-        console.log(`Got jwt token ${token}`)
+        // console.log(`Got jwt token ${token}`)
       })
     } else if (this.mode === 'signup' && this.signUpForm.valid) {
       // Handle sign up
-      console.log('Sign up:', this.signUpForm.value);
       this.authenticationService.signUp(this.signUpForm.controls.email.value, this.signUpForm.controls.password.value).subscribe((token: any) => {
-        console.log(`Got jwt token ${token}`)
+        // console.log(`Got jwt token ${token}`)
       })
     }
   }

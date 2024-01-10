@@ -10,8 +10,7 @@ import { JwtAccessToken } from './models/tokens';
   providedIn: 'root'
 })
 export class AuthenticationService extends BaseHttpService {
-  private isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private rawToken: string | null = null
+  public isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public jwtAccessToken$: BehaviorSubject<JwtAccessToken | null> = new BehaviorSubject<JwtAccessToken | null>(null)
 
   constructor(private http: HttpClient) {
@@ -20,12 +19,17 @@ export class AuthenticationService extends BaseHttpService {
     this.jwtAccessToken$.subscribe((x: JwtAccessToken | null) => {
       if (!x) {
         return
-      } console.log(`id=${x.id}, email=${x.email}`)
+      }
+      this.isAuthenticated$.next(true);
+      console.log(`parsed JwtAccessToken: id=${x.id}, email=${x.email}`)
     })
-  }
 
-  public getToken(): string | null {
-    return this.rawToken
+    // if we had a previously cached access token, use that one
+    let existingToken = localStorage.getItem('token')
+    if (existingToken) {
+      console.log(`Have cached accessToken ${existingToken}...`)
+      this.jwtAccessToken$.next(new JwtAccessToken(existingToken))
+    }
   }
 
   public signIn(email: string | null, password: string | null) {
@@ -34,10 +38,8 @@ export class AuthenticationService extends BaseHttpService {
 
     return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
       tap(token => {
-        this.rawToken = token.AccessToken
         this.jwtAccessToken$.next(new JwtAccessToken(token.AccessToken))
-        console.log
-        this.isAuthenticated$.next(true);
+        localStorage.setItem('token', token.AccessToken); // Save token to local storage
       })
     );
   }
@@ -48,9 +50,8 @@ export class AuthenticationService extends BaseHttpService {
 
     return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
       tap(token => {
-        this.rawToken = token.AccessToken
         this.jwtAccessToken$.next(new JwtAccessToken(token.AccessToken))
-        this.isAuthenticated$.next(true);
+        localStorage.setItem('token', token.AccessToken); // Save token to local storage
       })
     );
   }
