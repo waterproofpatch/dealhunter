@@ -12,7 +12,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
+func TokenDecorator(allowUnauthenticated bool, h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		bearerToken := strings.Split(authHeader, " ")
@@ -39,8 +39,12 @@ func TokenDecorator(h http.HandlerFunc) http.HandlerFunc {
 				return
 			}
 		} else {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
-			return
+			if allowUnauthenticated {
+				h(w, r)
+			} else {
+				http.Error(w, "Invalid token", http.StatusUnauthorized)
+				return
+			}
 		}
 	}
 }

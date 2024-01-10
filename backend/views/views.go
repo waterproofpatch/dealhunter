@@ -33,10 +33,10 @@ type SignInRequest struct {
 func Init() (*http.Handler, *mux.Router) {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(GetDeals))).Methods("GET")
-	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(CreateDeal))).Methods("POST")
-	r.HandleFunc("/deals/{id}", decorators.LogDecorator(decorators.TokenDecorator(DeleteDeal))).Methods("DELETE")
-	r.HandleFunc("/deals/{id}", decorators.LogDecorator(decorators.TokenDecorator(UpdateDeal))).Methods("PUT")
+	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(true, GetDeals))).Methods("GET")
+	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(false, CreateDeal))).Methods("POST")
+	r.HandleFunc("/deals/{id}", decorators.LogDecorator(decorators.TokenDecorator(false, DeleteDeal))).Methods("DELETE")
+	r.HandleFunc("/deals/{id}", decorators.LogDecorator(decorators.TokenDecorator(false, UpdateDeal))).Methods("PUT")
 	r.HandleFunc("/auth/signin", decorators.LogDecorator(SignIn)).Methods("POST")
 	r.HandleFunc("/auth/logout", decorators.LogDecorator(SignOut)).Methods("POST")
 	r.HandleFunc("/auth/signup", decorators.LogDecorator(SignUp)).Methods("POST")
