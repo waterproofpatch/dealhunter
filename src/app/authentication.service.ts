@@ -21,7 +21,7 @@ export class AuthenticationService extends BaseHttpService {
         return
       }
       this.isAuthenticated$.next(true);
-      console.log(`parsed JwtAccessToken: id=${x.id}, email=${x.email}`)
+      console.log(`parsed JwtAccessToken: id=${x.id}, email=${x.email}, exp=${x.exp}, is expired? ${x.isExpired()}, expires in ${x.secondsUntilExpiration()}`)
     })
 
     // if we had a previously cached access token, use that one
