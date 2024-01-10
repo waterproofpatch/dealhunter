@@ -16,7 +16,12 @@ export class AuthenticationService extends BaseHttpService {
 
   constructor(private http: HttpClient) {
     super();
-    this.jwtAccessToken$.subscribe((x: JwtAccessToken | null) => { x?.decodeToken() })
+    // display access tokens as they arrive
+    this.jwtAccessToken$.subscribe((x: JwtAccessToken | null) => {
+      if (!x) {
+        return
+      } console.log(`id=${x.id}, email=${x.email}`)
+    })
   }
 
   public getToken(): string | null {
