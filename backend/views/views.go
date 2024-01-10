@@ -13,6 +13,7 @@ import (
 	"deals/models"
 	"deals/tokens"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"golang.org/x/crypto/bcrypt"
@@ -145,8 +146,8 @@ func SignOut(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
-	token := r.Context().Value("token")
-	fmt.Printf("Token=%v", token)
+	token := r.Context().Value("token").(jwt.MapClaims)
+	fmt.Printf("token=%v, id=%v, email=%v", token, token["id"], token["email"])
 	var deals []models.Deal
 	database.GetDb().Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
