@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
+import { AuthenticationService } from './authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,6 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
   title = 'deals-app';
-  constructor() {
-    console.log("Production? " + environment.production); // Logs false for development environment
+  constructor(public authenticationService: AuthenticationService) {
   }
 }

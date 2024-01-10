@@ -7,10 +7,12 @@
     <span class="spacer"></span>
     <button mat-button [matMenuTriggerFor]="profileMenu" class="toolbar-button">Profile</button>
     <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item [routerLink]="['/my-profile']" *ngIf="authenticationService.isAuthenticated$ | async"
+        class="toolbar-button">My Profile</button>
       <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signup'}"
-        class="toolbar-button">Sign Up</button>
+        *ngIf="!(authenticationService.isAuthenticated$ | async)" class="toolbar-button">Sign Up</button>
       <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signin'}"
-        class="toolbar-button">Sign In</button>
+        *ngIf="!(authenticationService.isAuthenticated$ | async)" class="toolbar-button">Sign In</button>
     </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>
