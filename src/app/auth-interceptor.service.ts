@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
-// import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   accessToken: string | undefined = undefined
-  // constructor(private authenticationService: AuthenticationService) {
-  //   authenticationService.jwtAccessToken$.subscribe((x) => {
-  //     this.accessToken = x?.accessToken
-  //   })
-  // }
+  constructor(private authenticationService: AuthenticationService) {
+    this.authenticationService.jwtAccessToken$.subscribe((x) => {
+      this.accessToken = x?.accessToken
+    })
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     if (this.accessToken) {
@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
       // cloned headers, updated with the authorization.
       console.log("We are authenticated, sending accessToken")
       const authReq = req.clone({
-        headers: req.headers.set('Authorization', this.accessToken)
+        headers: req.headers.set('Authorization', `Bearer ${this.accessToken}`)
       });
       // Send cloned request with header to the next handler.
       return next.handle(authReq);
