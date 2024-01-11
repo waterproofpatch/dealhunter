@@ -193,10 +193,15 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteDeal(w http.ResponseWriter, r *http.Request) {
+	token, _ := r.Context().Value("token").(jwt.MapClaims)
 	params := mux.Vars(r)
 	id := params["id"]
 	var deal models.Deal
-	database.GetDb().First(&deal, id)
+	database.GetDb().First(&deal, id).Preload("User")
+	if deal.User.ID != token["id"] {
+		http.Error(w, "Cannot delete a deal that you didn't post!", http.StatusUnauthorized)
+		return
+	}
 	database.GetDb().Delete(&deal)
 	var deals []models.Deal
 	db := database.GetDb().Preload("Location").Preload("User")
@@ -211,12 +216,18 @@ func DeleteDeal(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateDeal(w http.ResponseWriter, r *http.Request) {
+	token, _ := r.Context().Value("token").(jwt.MapClaims)
 	params := mux.Vars(r)
 	id := params["id"]
 	vote := r.URL.Query().Get("vote")
 
 	var deal models.Deal
 	database.GetDb().First(&deal, id)
+
+	if deal.User.ID == token["id"] {
+		http.Error(w, "Cannot vote on a deal that you posted!", http.StatusBadRequest)
+		return
+	}
 
 	if vote == "up" {
 		deal.Upvotes++
