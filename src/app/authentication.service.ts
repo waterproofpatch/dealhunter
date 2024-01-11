@@ -43,6 +43,7 @@ export class AuthenticationService extends BaseHttpService {
     console.log("Logging out...")
     this.isAuthenticated$.next(false)
     localStorage.removeItem("token")
+    this.jwtAccessToken$.next(null)
   }
 
   public signIn(email: string | null, password: string | null) {
