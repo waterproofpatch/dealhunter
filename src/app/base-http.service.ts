@@ -18,13 +18,13 @@ export class BaseHttpService {
     this.isLoading$.next(true);
     return httpCall.pipe(
       catchError(err => {
-        console.error('An error occurred:', err.error);
         this.dialog.open(ErrorDialogComponent, { // Open the Error Dialog
           data: {
-            message: 'An error occurred: ' + err.error
+            message: 'An error occurred: ' + err.error,
+            status_code: err.status
           }
         });
-        throw new Error("Some error")
+        throw new Error(err.error)
       }),
       finalize(() => this.isLoading$.next(false))
     );
