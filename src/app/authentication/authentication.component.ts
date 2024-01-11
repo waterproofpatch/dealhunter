@@ -28,6 +28,10 @@ export class AuthenticationComponent implements OnInit {
     private authenticationService: AuthenticationService) {
     this.route.queryParams.subscribe(params => {
       this.mode = params['mode'];
+      if (this.mode == "signout") {
+        this.authenticationService.signOut()
+        this.router.navigate(["/deals"])
+      }
     });
   }
 
