@@ -8,6 +8,8 @@ import (
 )
 
 type Environment struct {
+	ADMIN_EMAIL                  string
+	ADMIN_PASSWORD               string
 	JWT_SIGNING_KEY              string
 	JWT_SIGNING_KEY_REFRESH      string
 	JWT_ACCESS_TOKEN_EXPIRE_MIN  string
@@ -29,6 +31,8 @@ func GetEnvironment() *Environment {
 func Init() error {
 	var env Environment
 	envVars := map[string]*string{
+		"ADMIN_EMAIL":                  &env.ADMIN_EMAIL,
+		"ADMIN_PASSWORD":               &env.ADMIN_PASSWORD,
 		"JWT_SIGNING_KEY":              &env.JWT_SIGNING_KEY,
 		"JWT_SIGNING_KEY_REFRESH":      &env.JWT_SIGNING_KEY_REFRESH,
 		"JWT_ACCESS_TOKEN_EXPIRE_MIN":  &env.JWT_ACCESS_TOKEN_EXPIRE_MIN,

@@ -1,12 +1,14 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 
 	"deals/environment"
 	"deals/logging"
 	"deals/models"
 
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -37,6 +39,12 @@ func Init() error {
 	}
 
 	migrate(db)
+
+	err = addDefaultUser(db)
+	if err != nil {
+		logging.GetLogger().Error().Msg("Failed adding default user")
+		return errors.New("Failed adding default user")
+	}
 	gDb = db
 
 	return nil
@@ -46,6 +54,26 @@ func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Deal{})
 	db.AutoMigrate(&models.Location{})
 	db.AutoMigrate(&models.User{})
+}
+
+func addDefaultUser(db *gorm.DB) error {
+	db.Where("is_admin = ?", true).Delete(&models.User{})
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(environment.GetEnvironment().ADMIN_PASSWORD), bcrypt.DefaultCost)
+	if err != nil {
+		logging.GetLogger().Error().Msgf("Failed hashing password")
+		return errors.New("Failed hashing password")
+	}
+	defaultUser := models.User{
+		Email:        environment.GetEnvironment().ADMIN_EMAIL,
+		PasswordHash: string(hashedPassword),
+		Reputation:   0,
+		IsAdmin:      true,
+	}
+	if err := db.Create(&defaultUser).Error; err != nil {
+		logging.GetLogger().Error().Msgf("Failed adding default user")
+		return errors.New("Failed adding default user")
+	}
+	return nil
 }
 
 func DeInit() {

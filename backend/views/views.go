@@ -76,6 +76,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	newUser := models.User{
 		Email:        req.Email,
 		PasswordHash: string(hashedPassword),
+		IsAdmin:      false,
 		Reputation:   0,
 	}
 	if err := database.GetDb().Create(&newUser).Error; err != nil {

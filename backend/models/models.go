@@ -29,6 +29,7 @@ type User struct {
 	gorm.Model
 	Email        string `json:"-"`
 	PasswordHash string `json:"-"`
+	IsAdmin      bool   `json:"-"`
 	Reputation   int
 }
 
