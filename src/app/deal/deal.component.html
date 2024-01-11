@@ -4,7 +4,7 @@
 		<mat-card-subtitle>Store: {{ deal.StoreName }}</mat-card-subtitle>
 	</mat-card-header>
 	<mat-card-content>
-		<p>Posted {{getSecondsSinceCreation()}} minutes ago</p>
+		<p>Posted {{getSecondsSinceCreation()}} minutes ago by {{deal.User.ID}}</p>
 		<p>
 			<mat-icon (click)="dealsService.downvoteDeal(deal)">thumb_down</mat-icon>
 			<mat-icon (click)="dealsService.upvoteDeal(deal)">thumb_up</mat-icon>

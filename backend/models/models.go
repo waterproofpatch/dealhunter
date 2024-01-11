@@ -17,6 +17,8 @@ type Deal struct {
 	gorm.Model
 	Location       Location `gorm:"foreignkey:LocationID"`
 	LocationID     uint
+	User           User `gorm:"foreignkey:UserID"` // Add this line
+	UserID         uint // Add this line
 	RetailPrice    float64
 	ActualPrice    float64
 	StoreName      string
@@ -31,6 +33,7 @@ type User struct {
 	PasswordHash string `json:"-"`
 	IsAdmin      bool   `json:"-"`
 	Reputation   int
+	Deals        []Deal `gorm:"foreignkey:UserID"` // Add this line
 }
 
 type JwtAccessToken struct {

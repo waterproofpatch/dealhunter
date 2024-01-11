@@ -146,21 +146,34 @@ func SignOut(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
-	token, ok := r.Context().Value("token").(jwt.MapClaims)
-	if !ok {
-		logging.GetLogger().Debug().Msgf("No token.")
-	} else {
-		logging.GetLogger().Debug().Msgf("token=%v, id=%v, email=%v", token, token["id"], token["email"])
-	}
 	var deals []models.Deal
-	database.GetDb().Preload("Location").Find(&deals)
+	database.GetDb().Preload("Location").Preload("User").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
 
 func CreateDeal(w http.ResponseWriter, r *http.Request) {
+	token, _ := r.Context().Value("token").(jwt.MapClaims)
 	var deal models.Deal
 	_ = json.NewDecoder(r.Body).Decode(&deal)
-	database.GetDb().Create(&deal)
+
+	logging.GetLogger().Debug().Msgf("token=%v,%d", token, token["id"])
+	// Assign the deal's user to the user from token["id"]
+	userIDFloat, ok := token["id"].(float64) // Ensure that token["id"] is of type float64
+	if !ok {
+		// Handle the case where token["id"] is not of type float64
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+	deal.UserID = uint(userIDFloat)
+
+	// Check if creating the deal fails
+	result := database.GetDb().Create(&deal)
+	if result.Error != nil {
+		logging.GetLogger().Error().Msgf("Failed creating deal: %v", result.Error)
+		http.Error(w, "Failed creating deal", http.StatusInternalServerError)
+		return
+	}
+
 	var deals []models.Deal
 	database.GetDb().Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)

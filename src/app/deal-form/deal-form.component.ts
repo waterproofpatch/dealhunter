@@ -34,6 +34,7 @@ export class DealFormComponent {
           LastUpvoteTime: "", // authoritative
           Upvotes: 0, // authoritative
           ID: 0, // authoritative
+          User: { ID: 0 },
         })
       } else {
         console.log('storeName and itemName are required');
