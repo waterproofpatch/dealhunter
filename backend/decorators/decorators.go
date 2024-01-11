@@ -14,6 +14,10 @@ import (
 
 func TokenDecorator(allowUnauthenticated bool, h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if allowUnauthenticated {
+			h(w, r)
+			return
+		}
 		authHeader := r.Header.Get("Authorization")
 		bearerToken := strings.Split(authHeader, " ")
 
@@ -39,12 +43,8 @@ func TokenDecorator(allowUnauthenticated bool, h http.HandlerFunc) http.HandlerF
 				return
 			}
 		} else {
-			if allowUnauthenticated {
-				h(w, r)
-			} else {
-				http.Error(w, "Invalid token", http.StatusUnauthorized)
-				return
-			}
+			http.Error(w, "Invalid token", http.StatusUnauthorized)
+			return
 		}
 	}
 }

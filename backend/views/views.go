@@ -2,7 +2,6 @@ package views
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -146,8 +145,12 @@ func SignOut(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
-	token := r.Context().Value("token").(jwt.MapClaims)
-	fmt.Printf("token=%v, id=%v, email=%v", token, token["id"], token["email"])
+	token, ok := r.Context().Value("token").(jwt.MapClaims)
+	if !ok {
+		logging.GetLogger().Debug().Msgf("No token.")
+	} else {
+		logging.GetLogger().Debug().Msgf("token=%v, id=%v, email=%v", token, token["id"], token["email"])
+	}
 	var deals []models.Deal
 	database.GetDb().Preload("Location").Find(&deals)
 	json.NewEncoder(w).Encode(deals)
