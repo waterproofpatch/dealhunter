@@ -1,6 +1,6 @@
 // authentication.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthenticationService } from '../authentication.service';
 
@@ -24,6 +24,7 @@ export class AuthenticationComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private authenticationService: AuthenticationService) {
     this.route.queryParams.subscribe(params => {
       this.mode = params['mode'];
@@ -37,12 +38,12 @@ export class AuthenticationComponent implements OnInit {
     if (this.mode === 'signin' && this.signInForm.valid) {
       // Handle sign in
       this.authenticationService.signIn(this.signInForm.controls.email.value, this.signInForm.controls.password.value).subscribe((token: any) => {
-        // console.log(`Got jwt token ${token}`)
+        this.router.navigate(["/deals"])
       })
     } else if (this.mode === 'signup' && this.signUpForm.valid) {
       // Handle sign up
       this.authenticationService.signUp(this.signUpForm.controls.email.value, this.signUpForm.controls.password.value).subscribe((token: any) => {
-        // console.log(`Got jwt token ${token}`)
+        this.router.navigate(["/deals"])
       })
     }
   }
