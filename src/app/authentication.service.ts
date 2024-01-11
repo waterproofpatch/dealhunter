@@ -49,7 +49,7 @@ export class AuthenticationService extends BaseHttpService {
     // Replace with your actual sign-in API endpoint
     const url = '/auth/signin';
 
-    return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
+    return this.withLoading(this.http.post<any>(`${this.apiUrl}${url}`, { email, password })).pipe(
       tap(token => {
         this.jwtAccessToken$.next(new JwtAccessToken(token.AccessToken))
         localStorage.setItem('token', token.AccessToken); // Save token to local storage
@@ -61,7 +61,7 @@ export class AuthenticationService extends BaseHttpService {
     // Replace with your actual sign-up API endpoint
     const url = '/auth/signup';
 
-    return this.http.post<any>(`${this.apiUrl}${url}`, { email, password }).pipe(
+    return this.withLoading(this.http.post<any>(`${this.apiUrl}${url}`, { email, password })).pipe(
       tap(token => {
         this.jwtAccessToken$.next(new JwtAccessToken(token.AccessToken))
         localStorage.setItem('token', token.AccessToken); // Save token to local storage
