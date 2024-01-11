@@ -21,6 +21,12 @@ export class AuthenticationService extends BaseHttpService {
       if (!x) {
         return
       }
+      if (x.isExpired()) {
+        console.log("Expired token.")
+        this.signOut()
+        this.jwtAccessToken$.next(null)
+        return
+      }
       this.isAuthenticated$.next(true);
       console.log(`parsed JwtAccessToken: id=${x.id}, email=${x.email}, exp=${x.exp}, is expired? ${x.isExpired()}, expires in ${x.secondsUntilExpiration()}`)
     })
@@ -31,6 +37,12 @@ export class AuthenticationService extends BaseHttpService {
       console.log(`Have cached accessToken ${existingToken}...`)
       this.jwtAccessToken$.next(new JwtAccessToken(existingToken))
     }
+  }
+
+  public signOut(): void {
+    console.log("Logging out...")
+    this.isAuthenticated$.next(false)
+    localStorage.removeItem("token")
   }
 
   public signIn(email: string | null, password: string | null) {
