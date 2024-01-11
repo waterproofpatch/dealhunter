@@ -147,7 +147,14 @@ func SignOut(w http.ResponseWriter, r *http.Request) {
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
 	var deals []models.Deal
-	database.GetDb().Preload("Location").Preload("User").Find(&deals)
+	db := database.GetDb().Preload("Location").Preload("User")
+	if db.Error != nil {
+		// Handle preload error
+		logging.GetLogger().Error().Msgf("Error: %v", db.Error)
+		http.Error(w, "Failed fetching deals.", http.StatusInternalServerError)
+		return
+	}
+	db.Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
 
@@ -156,7 +163,6 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	var deal models.Deal
 	_ = json.NewDecoder(r.Body).Decode(&deal)
 
-	logging.GetLogger().Debug().Msgf("token=%v,%d", token, token["id"])
 	// Assign the deal's user to the user from token["id"]
 	userIDFloat, ok := token["id"].(float64) // Ensure that token["id"] is of type float64
 	if !ok {
@@ -175,7 +181,14 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var deals []models.Deal
-	database.GetDb().Preload("Location").Find(&deals)
+	db := database.GetDb().Preload("Location").Preload("User")
+	if db.Error != nil {
+		// Handle preload error
+		logging.GetLogger().Error().Msgf("Error: %v", db.Error)
+		http.Error(w, "Failed fetching deals.", http.StatusInternalServerError)
+		return
+	}
+	db.Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
 
@@ -186,7 +199,14 @@ func DeleteDeal(w http.ResponseWriter, r *http.Request) {
 	database.GetDb().First(&deal, id)
 	database.GetDb().Delete(&deal)
 	var deals []models.Deal
-	database.GetDb().Preload("Location").Find(&deals)
+	db := database.GetDb().Preload("Location").Preload("User")
+	if db.Error != nil {
+		// Handle preload error
+		logging.GetLogger().Error().Msgf("Error: %v", db.Error)
+		http.Error(w, "Failed fetching deals.", http.StatusInternalServerError)
+		return
+	}
+	db.Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
 
@@ -210,6 +230,13 @@ func UpdateDeal(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var deals []models.Deal
-	database.GetDb().Preload("Location").Find(&deals)
+	db := database.GetDb().Preload("Location").Preload("User")
+	if db.Error != nil {
+		// Handle preload error
+		logging.GetLogger().Error().Msgf("Error: %v", db.Error)
+		http.Error(w, "Failed fetching deals.", http.StatusInternalServerError)
+		return
+	}
+	db.Find(&deals)
 	json.NewEncoder(w).Encode(deals)
 }
