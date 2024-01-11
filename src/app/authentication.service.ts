@@ -5,6 +5,7 @@ import { BaseHttpService } from './base-http.service';
 import { BehaviorSubject, tap } from 'rxjs';
 
 import { JwtAccessToken } from './models/tokens';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class AuthenticationService extends BaseHttpService {
   public isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public jwtAccessToken$: BehaviorSubject<JwtAccessToken | null> = new BehaviorSubject<JwtAccessToken | null>(null)
 
-  constructor(private http: HttpClient) {
-    super();
+  constructor(private http: HttpClient, private _dialog: MatDialog) {
+    super(_dialog);
     // display access tokens as they arrive
     this.jwtAccessToken$.subscribe((x: JwtAccessToken | null) => {
       if (!x) {

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu'
 import { AuthInterceptor } from './auth-interceptor.service';
@@ -20,6 +21,7 @@ import { DealsComponent } from './deals/deals.component';
 import { DealComponent } from './deal/deal.component';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { ProfileComponent } from './profile/profile.component';
     DealsComponent,
     DealComponent,
     AuthenticationComponent,
-    ProfileComponent
+    ProfileComponent,
+    ErrorDialogComponent
   ],
   imports: [
     HttpClientModule,
@@ -43,6 +46,7 @@ import { ProfileComponent } from './profile/profile.component';
     MatButtonModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    MatDialogModule,
     BrowserAnimationsModule
   ],
   providers: [

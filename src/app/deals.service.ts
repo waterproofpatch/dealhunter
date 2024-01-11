@@ -7,6 +7,7 @@ import { LocationService } from './location.service';
 
 import { environment } from '../environments/environment';
 import { BaseHttpService } from './base-http.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,8 @@ import { BaseHttpService } from './base-http.service';
 export class DealsService extends BaseHttpService {
   private deals$: BehaviorSubject<Deal[]> = new BehaviorSubject<Deal[]>([])
 
-  constructor(private locationService: LocationService, private http: HttpClient) {
-    super()
+  constructor(private locationService: LocationService, private http: HttpClient, private _dialog: MatDialog) {
+    super(_dialog)
     this.withLoading(this.getDealsHttp()).subscribe((deals: Deal[]) => {
       this.deals$.next(deals)
     })
