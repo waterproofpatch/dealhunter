@@ -41,9 +41,10 @@ func Init() (*http.Handler, *mux.Router) {
 	r.HandleFunc("/auth/signup", decorators.LogDecorator(SignUp)).Methods("POST")
 
 	corsOptions := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, // your website
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
-		AllowedHeaders: []string{"*"},
+		AllowedOrigins:   []string{"https://localhost:4300", "https://main.d1gmmk0f0epwh2.amplifyapp.com"}, // your website
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Access-Control-Allow-Origin", "Authorization"},
+		AllowCredentials: true,
 	})
 
 	handler := corsOptions.Handler(r)

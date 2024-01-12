@@ -1,27 +1,48 @@
 # DealsApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.9.
+## Generate Keys
 
-## Development server
+```bash
+cd backend
+openssl genrsa -out server.key 2048
+openssl req -new -x509 -sha256 -key server.key -out server.crt -days 3650
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+cd ../
+openssl genrsa -out client.key 2048
+openssl req -new -x509 -sha256 -key client.key -out client.crt -days 3650
+```
 
-## Code scaffolding
+## Development
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Backend
 
-## Build
+```bash
+cd backend
+go mod tidy
+go run main.go
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Frontend
 
-## Running unit tests
+```bash
+ng serve --configuration development --port 4300
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Deployment
 
-## Running end-to-end tests
+## Backend
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Deployed to alwaysdata.
 
-## Further help
+```bash
+bash backend/scripts/deploy.sh
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Frontend
+
+Deployed to Amazon Amplify.
+
+```bash
+git checkout master
+git push
+```

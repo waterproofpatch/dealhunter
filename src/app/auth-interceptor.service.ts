@@ -17,12 +17,18 @@ export class AuthInterceptor implements HttpInterceptor {
       // cloned headers, updated with the authorization.
       console.log("We are authenticated, sending accessToken")
       const authReq = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${this.accessToken}`)
+        headers: req.headers.set('Authorization', `Bearer ${this.accessToken}`),
+        // send cookies along
+        withCredentials: true,
       });
       // Send cloned request with header to the next handler.
       return next.handle(authReq);
     } else {
-      return next.handle(req)
+      const authReq = req.clone({
+        // send cookies along
+        withCredentials: true,
+      });
+      return next.handle(authReq)
     }
   }
 }

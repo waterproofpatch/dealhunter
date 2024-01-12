@@ -13,6 +13,7 @@ func SetRefreshTokenCookie(refreshToken string) *http.Cookie {
 		Expires:  time.Now().Add(24 * time.Hour), // The cookie will expire in 24 hours
 		HttpOnly: true,
 		Secure:   true,
+		Path:     "/",
 		SameSite: http.SameSiteNoneMode,
 	}
 	return cookie
