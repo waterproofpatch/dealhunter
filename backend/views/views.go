@@ -245,8 +245,13 @@ func DeleteDeal(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
 	var deal models.Deal
+	tokenUserId, err := strconv.ParseInt(token["id"].(string), 10, 32)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusInternalServerError)
+		return
+	}
 	database.GetDb().First(&deal, id).Preload("User")
-	if deal.User.ID != token["id"] {
+	if deal.User.ID != uint(tokenUserId) {
 		http.Error(w, "Cannot delete a deal that you didn't post!", http.StatusUnauthorized)
 		return
 	}
