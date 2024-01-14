@@ -72,4 +72,16 @@ export class AuthenticationService extends BaseHttpService {
       })
     );
   }
+  public refreshToken() {
+    console.log("Issuing refresh request...")
+    // Replace with your actual sign-up API endpoint
+    const url = '/auth/refresh';
+    return this.withLoading(this.http.get<any>(`${this.apiUrl}${url}`)).pipe(
+      tap(token => {
+        console.log(`Got refreshed access token ${token}`)
+        this.jwtAccessToken$.next(new JwtAccessToken(token.AccessToken))
+        localStorage.setItem('token', token.AccessToken); // Save token to local storage
+      })
+    );
+  }
 }

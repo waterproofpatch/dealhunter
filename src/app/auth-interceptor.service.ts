@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
+import { Observable, catchError, switchMap, throwError } from 'rxjs';
+import { HttpEvent, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -11,24 +13,39 @@ export class AuthInterceptor implements HttpInterceptor {
     })
   }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.accessToken) {
-      // Clone the request and replace the original headers with
-      // cloned headers, updated with the authorization.
-      console.log("We are authenticated, sending accessToken")
       const authReq = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${this.accessToken}`),
-        // send cookies along
         withCredentials: true,
       });
-      // Send cloned request with header to the next handler.
-      return next.handle(authReq);
+      return next.handle(authReq).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 419) { // Assuming 419 is the status code for expired tokens
+            return this.authenticationService.refreshToken().pipe(
+              switchMap((token: any) => {
+                console.log(`Issuing re-request for ${req.url}`)
+                const refreshedReq = req.clone({
+                  headers: req.headers.set('Authorization', `Bearer ${token}`),
+                  withCredentials: true,
+                });
+                return next.handle(refreshedReq);
+              })
+            );
+          } else {
+            // something wrong with refresh token, need to force user to 
+            // reauth
+            this.authenticationService.signOut()
+            return throwError(error);
+          }
+        })
+      );
     } else {
       const authReq = req.clone({
-        // send cookies along
         withCredentials: true,
       });
-      return next.handle(authReq)
+      return next.handle(authReq);
     }
   }
+
 }

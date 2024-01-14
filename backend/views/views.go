@@ -42,7 +42,7 @@ func Init() (*http.Handler, *mux.Router) {
 	r.HandleFunc("/auth/signin", decorators.LogDecorator(SignIn)).Methods("POST")
 	r.HandleFunc("/auth/logout", decorators.LogDecorator(SignOut)).Methods("POST")
 	r.HandleFunc("/auth/signup", decorators.LogDecorator(SignUp)).Methods("POST")
-	r.HandleFunc("/auth/refresh", decorators.LogDecorator(Refresh)).Methods("POST")
+	r.HandleFunc("/auth/refresh", decorators.LogDecorator(Refresh)).Methods("GET")
 
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://localhost:4300", "https://main.d1gmmk0f0epwh2.amplifyapp.com"}, // your website

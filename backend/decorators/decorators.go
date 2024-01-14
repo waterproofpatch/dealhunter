@@ -33,7 +33,7 @@ func TokenDecorator(allowUnauthenticated bool, h http.HandlerFunc) http.HandlerF
 			if ve, ok := err.(*jwt.ValidationError); ok {
 				if ve.Errors&jwt.ValidationErrorExpired != 0 {
 					// JWT is expired
-					http.Error(w, "Token expired", http.StatusUnauthorized)
+					http.Error(w, "Token expired", 419)
 					return
 				} else {
 					logging.GetLogger().Error().Msg(err.Error())
