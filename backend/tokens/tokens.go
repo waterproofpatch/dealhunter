@@ -64,7 +64,7 @@ func VerifyRefreshToken(theToken string) (jwt.MapClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(environment.GetEnvironment().JWT_SIGNING_KEY), nil
+		return []byte(environment.GetEnvironment().JWT_SIGNING_KEY_REFRESH), nil
 	})
 	if err != nil {
 		logging.GetLogger().Error().Msg(err.Error())
