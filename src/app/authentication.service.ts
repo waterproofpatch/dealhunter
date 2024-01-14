@@ -24,9 +24,9 @@ export class AuthenticationService extends BaseHttpService {
       }
       if (x.isExpired()) {
         console.log("Expired token.")
-        this.signOut()
-        this.jwtAccessToken$.next(null)
-        return
+        // this.signOut()
+        // this.jwtAccessToken$.next(null)
+        // return
       }
       this.userId$.next(x.id)
       this.isAuthenticated$.next(true);

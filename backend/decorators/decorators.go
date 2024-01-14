@@ -29,10 +29,17 @@ func TokenDecorator(allowUnauthenticated bool, h http.HandlerFunc) http.HandlerF
 				}
 				return []byte(environment.GetEnvironment().JWT_SIGNING_KEY), nil
 			})
-			if err != nil {
-				logging.GetLogger().Error().Msg(err.Error())
-				http.Error(w, "Invalid token", http.StatusUnauthorized)
-				return
+
+			if ve, ok := err.(*jwt.ValidationError); ok {
+				if ve.Errors&jwt.ValidationErrorExpired != 0 {
+					// JWT is expired
+					http.Error(w, "Token expired", http.StatusUnauthorized)
+					return
+				} else {
+					logging.GetLogger().Error().Msg(err.Error())
+					http.Error(w, "Invalid token", http.StatusUnauthorized)
+					return
+				}
 			}
 
 			if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
