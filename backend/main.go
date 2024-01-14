@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -10,6 +11,26 @@ import (
 	"deals/logging"
 	"deals/views"
 )
+
+func getLocation() {
+	lat := "37.4224764"
+	lng := "-122.0842499"
+	apiKey := environment.GetEnvironment().GOOGLE_GEOCODING_API_KEY
+
+	url := fmt.Sprintf("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s", lat, lng, apiKey)
+	resp, err := http.Get(url)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(body))
+}
 
 func main() {
 	// init logging library first
@@ -38,6 +59,7 @@ func main() {
 		fmt.Println("No port environment variable set, defaulting to 8000")
 		port = "8000" // Provide a default value if no environment variable is set
 	}
+	getLocation()
 
 	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)

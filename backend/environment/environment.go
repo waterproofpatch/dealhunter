@@ -20,6 +20,7 @@ type Environment struct {
 	DB_USER                      string
 	DB_PORT                      string
 	PORT                         string
+	GOOGLE_GEOCODING_API_KEY     string
 }
 
 var gEnv *Environment
@@ -43,6 +44,7 @@ func Init() error {
 		"DB_USER":                      &env.DB_USER,
 		"DB_PORT":                      &env.DB_PORT,
 		"PORT":                         &env.PORT,
+		"GOOGLE_GEOCODING_API_KEY":     &env.GOOGLE_GEOCODING_API_KEY,
 	}
 
 	for name, ptr := range envVars {
