@@ -200,6 +200,7 @@ func GetDeals(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	db.Find(&deals)
+	logging.GetLogger().Debug().Msgf("Returning %d deals...", len(deals))
 	json.NewEncoder(w).Encode(deals)
 }
 
@@ -216,6 +217,8 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	deal.UserID = uint(userIDFloat)
+
+	logging.GetLogger().Debug().Msgf("Adding deal for user %d (%s)", deal.UserID, token["email"])
 
 	// Check if creating the deal fails
 	result := database.GetDb().Create(&deal)
