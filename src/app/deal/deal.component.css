@@ -1,0 +1,23 @@
+.deal-card {
+	display: flex;
+	flex-direction: column;
+}
+
+.deal-details {
+	display: flex;
+	justify-content: space-between;
+}
+
+.deal-actions {
+	display: flex;
+	align-items: center;
+}
+
+.deal-prices {
+	display: flex;
+	justify-content: space-between;
+}
+
+.deal-location {
+	margin-top: 10px;
+}
