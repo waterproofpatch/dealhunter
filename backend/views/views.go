@@ -39,6 +39,7 @@ func Init() (*http.Handler, *mux.Router) {
 	r.HandleFunc("/auth/signin", decorators.LogDecorator(SignIn)).Methods("POST")
 	r.HandleFunc("/auth/logout", decorators.LogDecorator(SignOut)).Methods("POST")
 	r.HandleFunc("/auth/signup", decorators.LogDecorator(SignUp)).Methods("POST")
+	r.HandleFunc("/auth/refresh", decorators.LogDecorator(Refresh)).Methods("POST")
 
 	corsOptions := cors.New(cors.Options{
 		AllowedOrigins:   []string{"https://localhost:4300", "https://main.d1gmmk0f0epwh2.amplifyapp.com"}, // your website
@@ -135,6 +136,49 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 	logging.GetLogger().Debug().Msgf("set refreshToken cookie")
 
+	response := models.JwtAccessToken{
+		AccessToken: accessToken,
+	}
+
+	// Convert the response object to JSON and write it to the response writer
+	json.NewEncoder(w).Encode(response)
+}
+
+func Refresh(w http.ResponseWriter, r *http.Request) {
+	// Read the refresh token from the cookie
+	cookie, err := r.Cookie("refresh_token")
+	if err != nil {
+		http.Error(w, "Missing refresh token", http.StatusBadRequest)
+		return
+	}
+
+	// Verify the refresh token
+	claims, err := tokens.VerifyRefreshToken(cookie.Value)
+	if err != nil {
+		http.Error(w, "Invalid refresh token", http.StatusUnauthorized)
+		return
+	}
+
+	var user models.User
+	if err := database.GetDb().Where("email = ?", claims["email"]).First(&user).Error; err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	// Generate a new access token
+	accessToken := tokens.GenerateAccessToken(user)
+	logging.GetLogger().Debug().Msgf("Generated access token: %v", accessToken)
+
+	// Generate a new refresh token
+	refreshToken := tokens.GenerateRefrehToken(user)
+	logging.GetLogger().Debug().Msgf("Generated refresh token: %v", refreshToken)
+
+	// Set the new refresh token as a cookie
+	newCookie := cookies.SetRefreshTokenCookie(refreshToken)
+	http.SetCookie(w, newCookie)
+	logging.GetLogger().Debug().Msgf("Set refresh token cookie")
+
+	// Create the response object
 	response := models.JwtAccessToken{
 		AccessToken: accessToken,
 	}

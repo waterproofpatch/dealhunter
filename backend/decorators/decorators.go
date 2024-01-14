@@ -22,7 +22,8 @@ func TokenDecorator(allowUnauthenticated bool, h http.HandlerFunc) http.HandlerF
 		bearerToken := strings.Split(authHeader, " ")
 
 		if len(bearerToken) == 2 {
-			token, err := jwt.Parse(bearerToken[1], func(token *jwt.Token) (interface{}, error) {
+			accessToken := bearerToken[1]
+			token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 				}
