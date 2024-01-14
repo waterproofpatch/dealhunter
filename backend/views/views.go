@@ -3,6 +3,7 @@ package views
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"deals/cookies"
@@ -210,13 +211,12 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewDecoder(r.Body).Decode(&deal)
 
 	// Assign the deal's user to the user from token["id"]
-	userIDFloat, ok := token["id"].(float64) // Ensure that token["id"] is of type float64
-	if !ok {
-		// Handle the case where token["id"] is not of type float64
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+	tokenUserId, err := strconv.ParseInt(token["id"].(string), 10, 32)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusInternalServerError)
 		return
 	}
-	deal.UserID = uint(userIDFloat)
+	deal.UserID = uint(tokenUserId)
 
 	logging.GetLogger().Debug().Msgf("Adding deal for user %d (%s)", deal.UserID, token["email"])
 
@@ -270,9 +270,15 @@ func UpdateDeal(w http.ResponseWriter, r *http.Request) {
 	vote := r.URL.Query().Get("vote")
 
 	var deal models.Deal
-	database.GetDb().First(&deal, id)
+	database.GetDb().Preload("User").First(&deal, id)
 
-	if deal.User.ID == token["id"] {
+	tokenUserId, err := strconv.ParseInt(token["id"].(string), 10, 32)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusInternalServerError)
+		return
+	}
+
+	if deal.User.ID == uint(tokenUserId) {
 		http.Error(w, "Cannot vote on a deal that you posted!", http.StatusBadRequest)
 		return
 	}

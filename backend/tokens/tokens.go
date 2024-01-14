@@ -21,7 +21,7 @@ func GenerateAccessToken(user models.User) string {
 		panic("Failed generating token (1)!")
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":    user.ID,
+		"id":    strconv.FormatUint(uint64(user.ID), 10),
 		"email": user.Email,
 		"exp":   time.Now().Add(time.Minute * time.Duration(expireMin)).Unix(),
 	})
