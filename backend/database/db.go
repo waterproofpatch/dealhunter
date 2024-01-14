@@ -45,6 +45,8 @@ func Init() error {
 		logging.GetLogger().Error().Msg("Failed adding default user")
 		return errors.New("Failed adding default user")
 	}
+
+	setTriggers(db)
 	gDb = db
 
 	return nil
@@ -82,6 +84,33 @@ func addDefaultUser(db *gorm.DB) error {
 		}
 	}
 	return nil
+}
+
+func setTriggers(db *gorm.DB) {
+	tables := []string{"users", "locations", "deals", "votes"}
+
+	for _, table := range tables {
+		sql := fmt.Sprintf(`
+    CREATE OR REPLACE FUNCTION check_record_count() RETURNS TRIGGER AS $$
+    BEGIN
+       IF (SELECT count(*) FROM %s) >= 1000 THEN
+          RAISE EXCEPTION 'You can store only 1000 records.';
+       END IF;
+       RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER your_trigger_name
+    BEFORE INSERT ON %s
+    FOR EACH ROW EXECUTE PROCEDURE check_record_count();
+    `, table, table)
+
+		err := db.Exec(sql).Error
+		if err != nil {
+			// Handle error
+			logging.GetLogger().Error().Msgf("Failed executing trigger: %v", err)
+		}
+	}
 }
 
 func DeInit() {
