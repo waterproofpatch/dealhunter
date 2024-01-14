@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class AuthenticationService extends BaseHttpService {
   public isAuthenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public jwtAccessToken$: BehaviorSubject<JwtAccessToken | null> = new BehaviorSubject<JwtAccessToken | null>(null)
+  public userId$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
 
   constructor(private http: HttpClient, private _dialog: MatDialog) {
     super(_dialog);
@@ -27,6 +28,7 @@ export class AuthenticationService extends BaseHttpService {
         this.jwtAccessToken$.next(null)
         return
       }
+      this.userId$.next(x.id)
       this.isAuthenticated$.next(true);
       console.log(`parsed JwtAccessToken: id=${x.id}, email=${x.email}, exp=${x.exp}, is expired? ${x.isExpired()}, expires in ${x.secondsUntilExpiration()}`)
     })
@@ -44,6 +46,7 @@ export class AuthenticationService extends BaseHttpService {
     this.isAuthenticated$.next(false)
     localStorage.removeItem("token")
     this.jwtAccessToken$.next(null)
+    this.userId$.next(0)
   }
 
   public signIn(email: string | null, password: string | null) {
