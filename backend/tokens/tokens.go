@@ -68,13 +68,13 @@ func VerifyRefreshToken(theToken string) (jwt.MapClaims, error) {
 	})
 	if err != nil {
 		logging.GetLogger().Error().Msg(err.Error())
-		return nil, errors.New("Invalid token")
+		return nil, errors.New("Invalid token (1)")
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		return claims, nil
 	} else {
 		logging.GetLogger().Error().Msg(err.Error())
-		return nil, errors.New("Invalid token")
+		return nil, errors.New("Invalid token (2)")
 	}
 }
