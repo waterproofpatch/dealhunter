@@ -252,7 +252,7 @@ func DeleteDeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid user ID", http.StatusInternalServerError)
 		return
 	}
-	database.GetDb().First(&deal, id).Preload("User")
+	database.GetDb().Preload("User").First(&deal, id)
 	if deal.User.ID != uint(tokenUserId) {
 		http.Error(w, "Cannot delete a deal that you didn't post!", http.StatusUnauthorized)
 		return
