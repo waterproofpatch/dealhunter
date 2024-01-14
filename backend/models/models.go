@@ -35,6 +35,13 @@ type User struct {
 	Reputation   int
 	Deals        []Deal `gorm:"foreignkey:UserID"` // Add this line
 }
+type Vote struct {
+	gorm.Model
+	User   User `gorm:"foreignkey:UserID"`
+	UserID uint
+	Deal   Deal `gorm:"foreignkey:DealID"`
+	DealID uint
+}
 
 type JwtAccessToken struct {
 	AccessToken string

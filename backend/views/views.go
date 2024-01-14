@@ -2,6 +2,7 @@ package views
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -17,6 +18,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type SignUpRequest struct {
@@ -270,20 +272,38 @@ func DeleteDeal(w http.ResponseWriter, r *http.Request) {
 
 func UpdateDeal(w http.ResponseWriter, r *http.Request) {
 	token, _ := r.Context().Value("token").(jwt.MapClaims)
-	params := mux.Vars(r)
-	id := params["id"]
-	vote := r.URL.Query().Get("vote")
-
-	var deal models.Deal
-	database.GetDb().Preload("User").First(&deal, id)
-
-	tokenUserId, err := strconv.ParseInt(token["id"].(string), 10, 32)
-	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusInternalServerError)
+	userIDStr, ok := token["id"].(string)
+	if !ok {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
 		return
 	}
 
-	if deal.User.ID == uint(tokenUserId) {
+	userID, err := strconv.ParseUint(userIDStr, 10, 32)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	params := mux.Vars(r)
+	dealID := params["id"]
+	vote := r.URL.Query().Get("vote")
+
+	var existingVote models.Vote
+	result := database.GetDb().Where("user_id = ? AND deal_id = ?", userID, dealID).First(&existingVote)
+	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		http.Error(w, "Failed checking existing votes.", http.StatusInternalServerError)
+		return
+	}
+
+	if existingVote.ID != 0 {
+		http.Error(w, "You have already voted on this deal!", http.StatusBadRequest)
+		return
+	}
+
+	var deal models.Deal
+	database.GetDb().Preload("User").First(&deal, dealID)
+
+	if deal.User.ID == uint(userID) {
 		http.Error(w, "Cannot vote on a deal that you posted!", http.StatusBadRequest)
 		return
 	}
@@ -292,17 +312,21 @@ func UpdateDeal(w http.ResponseWriter, r *http.Request) {
 		deal.Upvotes++
 		deal.LastUpvoteTime = time.Now()
 		database.GetDb().Save(&deal)
-	}
-	if vote == "down" {
+	} else if vote == "down" {
 		deal.Upvotes--
 		deal.LastUpvoteTime = time.Now()
 		database.GetDb().Save(&deal)
 	}
 
+	newVote := models.Vote{
+		UserID: uint(userID),
+		DealID: deal.ID,
+	}
+	database.GetDb().Create(&newVote)
+
 	var deals []models.Deal
 	db := database.GetDb().Preload("Location").Preload("User")
 	if db.Error != nil {
-		// Handle preload error
 		logging.GetLogger().Error().Msgf("Error: %v", db.Error)
 		http.Error(w, "Failed fetching deals.", http.StatusInternalServerError)
 		return
