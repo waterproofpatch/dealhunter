@@ -57,21 +57,28 @@ func migrate(db *gorm.DB) {
 }
 
 func addDefaultUser(db *gorm.DB) error {
-	db.Where("is_admin = ?", true).Delete(&models.User{})
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(environment.GetEnvironment().ADMIN_PASSWORD), bcrypt.DefaultCost)
-	if err != nil {
-		logging.GetLogger().Error().Msgf("Failed hashing password")
-		return errors.New("Failed hashing password")
-	}
-	defaultUser := models.User{
-		Email:        environment.GetEnvironment().ADMIN_EMAIL,
-		PasswordHash: string(hashedPassword),
-		Reputation:   0,
-		IsAdmin:      true,
-	}
-	if err := db.Create(&defaultUser).Error; err != nil {
-		logging.GetLogger().Error().Msgf("Failed adding default user")
-		return errors.New("Failed adding default user")
+	var user models.User
+	if err := db.Where("is_admin = ?", true).First(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(environment.GetEnvironment().ADMIN_PASSWORD), bcrypt.DefaultCost)
+			if err != nil {
+				logging.GetLogger().Error().Msgf("Failed hashing password")
+				return errors.New("Failed hashing password")
+			}
+			defaultUser := models.User{
+				Email:        environment.GetEnvironment().ADMIN_EMAIL,
+				PasswordHash: string(hashedPassword),
+				Reputation:   0,
+				IsAdmin:      true,
+			}
+			if err := db.Create(&defaultUser).Error; err != nil {
+				logging.GetLogger().Error().Msgf("Failed adding default user")
+				return errors.New("Failed adding default user")
+			}
+		} else {
+			logging.GetLogger().Error().Msgf("Failed retrieving user")
+			return errors.New("Failed retrieving user")
+		}
 	}
 	return nil
 }
