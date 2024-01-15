@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,12 +13,14 @@ import (
 	"deals/views"
 )
 
-func getLocation() {
-	lat := "37.4224764"
-	lng := "-122.0842499"
+type Location struct {
+	Address string `json:"formatted_address"`
+}
+
+func getLocationFor(lat string, lon string) string {
 	apiKey := environment.GetEnvironment().GOOGLE_GEOCODING_API_KEY
 
-	url := fmt.Sprintf("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s", lat, lng, apiKey)
+	url := fmt.Sprintf("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s", lat, lon, apiKey)
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
@@ -29,7 +32,19 @@ func getLocation() {
 		panic(err)
 	}
 
-	fmt.Println(string(body))
+	// Write the response body to a text file
+	err = ioutil.WriteFile("response.txt", body, 0o644)
+	if err != nil {
+		panic(err)
+	}
+
+	var location Location
+	err = json.Unmarshal(body, &location)
+	if err != nil {
+		panic(err)
+	}
+
+	return location.Address
 }
 
 func main() {
@@ -59,7 +74,8 @@ func main() {
 		fmt.Println("No port environment variable set, defaulting to 8000")
 		port = "8000" // Provide a default value if no environment variable is set
 	}
-	getLocation()
+	address := getLocationFor("39.148", "-76.73")
+	fmt.Printf("address is %v", address)
 
 	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)
