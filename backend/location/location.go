@@ -43,6 +43,7 @@ func GetLatLonFor(address string) (float64, float64) {
 }
 
 func GetLocationFor(lat float64, lon float64) string {
+	return "OVER QUOTA"
 	// Create a new client with your API key
 	ctx := context.Background()
 	// Create a context with a cancel function
