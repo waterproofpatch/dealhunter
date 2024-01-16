@@ -11,6 +11,8 @@ import (
 )
 
 func GetLatLonFor(address string) (float64, float64) {
+	// temp quota
+	return -1, -1
 	// Create a new client with your API key
 	ctx := context.Background()
 	// Create a context with a cancel function
