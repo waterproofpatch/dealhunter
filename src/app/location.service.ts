@@ -13,10 +13,18 @@ import { HttpClient } from '@angular/common/http';
 export class LocationService extends BaseHttpService {
   public location: Location = { Latitude: 0, Longitude: 0 }
   public address$: BehaviorSubject<string> = new BehaviorSubject<string>("")
+  private intervalId: any;
 
   constructor(private _dialog: MatDialog, private http: HttpClient) {
     super(_dialog)
     this.getLocation()
+    this.intervalId = setInterval(() => this.getLocation(), 180000); // 180000 milliseconds = 3 minutes
+  }
+  ngOnDestroy() {
+    if (this.intervalId) {
+      console.log("Clearing timer...")
+      clearInterval(this.intervalId);
+    }
   }
 
   /**
