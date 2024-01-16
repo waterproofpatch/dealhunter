@@ -13,11 +13,6 @@ type Location struct {
 	Latitude  float64
 }
 
-type Address struct {
-	gorm.Model
-	Address string
-}
-
 type Deal struct {
 	gorm.Model
 	Location       Location `gorm:"foreignkey:LocationID"`
@@ -50,4 +45,8 @@ type Vote struct {
 
 type JwtAccessToken struct {
 	AccessToken string
+}
+
+type Address struct {
+	Address string
 }
