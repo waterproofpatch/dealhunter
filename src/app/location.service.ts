@@ -1,27 +1,38 @@
 import { Injectable } from '@angular/core';
 import { Location } from './models/location';
+import { BaseHttpService } from './base-http.service';
+import { MatDialog } from '@angular/material/dialog';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+import { Address } from './models/address';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LocationService {
+export class LocationService extends BaseHttpService {
   public location: Location = { Latitude: 0, Longitude: 0 }
+  public address$: BehaviorSubject<string> = new BehaviorSubject<string>("")
 
-  constructor() {
+  constructor(private _dialog: MatDialog, private http: HttpClient) {
+    super(_dialog)
     this.getLocation()
   }
 
-  private getLocation(): void {
+  private getLocation(): boolean {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const longitude = position.coords.longitude;
         const latitude = position.coords.latitude;
         this.location.Longitude = longitude;
         this.location.Latitude = latitude;
+        this.getAddress(this.location)
+        return true
       });
     } else {
       console.log('No support for geolocation');
     }
+    return false
   }
 
   private toRadians(degrees: number): number {
@@ -44,5 +55,19 @@ export class LocationService {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c;
+  }
+
+  /**
+   * given lat/lon, get the address right now
+   */
+  private getAddress(location: Location): void {
+    this.getAddressHttp(location.Latitude, location.Longitude).subscribe((address: Address) => {
+      console.log(`Address is ${address.Address}`)
+      this.address$.next(address.Address)
+    });
+  }
+
+  private getAddressHttp(lat: number, lon: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/address?lat=${lat}&lon=${lon}`)
   }
 }

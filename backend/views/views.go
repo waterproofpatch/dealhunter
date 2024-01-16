@@ -10,6 +10,7 @@ import (
 	"deals/cookies"
 	"deals/database"
 	"deals/decorators"
+	"deals/location"
 	"deals/logging"
 	"deals/models"
 	"deals/tokens"
@@ -35,6 +36,7 @@ type SignInRequest struct {
 func Init() (*http.Handler, *mux.Router) {
 	r := mux.NewRouter()
 
+	r.HandleFunc("/address", decorators.LogDecorator(decorators.TokenDecorator(true, GetAddress))).Methods("GET")
 	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(true, GetDeals))).Methods("GET")
 	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(false, CreateDeal))).Methods("POST")
 	r.HandleFunc("/deals/{id}", decorators.LogDecorator(decorators.TokenDecorator(false, DeleteDeal))).Methods("DELETE")
@@ -192,6 +194,31 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 
 func SignOut(w http.ResponseWriter, r *http.Request) {
 }
+
+func GetAddress(w http.ResponseWriter, r *http.Request) {
+	latStr := r.URL.Query().Get("lat")
+	lonStr := r.URL.Query().Get("lon")
+	lat, err := strconv.ParseFloat(latStr, 64)
+	if err != nil {
+		logging.GetLogger().Error().Msgf("Error converting latitude to float64: %v", err)
+		http.Error(w, "Error converting latitude to float64 ", http.StatusInternalServerError)
+		return
+	}
+
+	lon, err := strconv.ParseFloat(lonStr, 64)
+	if err != nil {
+		logging.GetLogger().Error().Msgf("Error converting longitude to float64: %v", err)
+		http.Error(w, "Error converting latitude to float64 ", http.StatusInternalServerError)
+		return
+	}
+	address := location.GetLocationFor(lat, lon)
+	response := models.Address{
+		Address: address,
+	}
+	json.NewEncoder(w).Encode(response)
+}
+
+// Convert the response object to JSON and write it to the response writer
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
 	var deals []models.Deal

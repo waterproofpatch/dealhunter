@@ -1,5 +1,5 @@
 <p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
-	{{locationService.location.Longitude | truncate}}
+	{{locationService.location.Longitude | truncate}}. Address: {{locationService.address$ | async}}
 </p>
 <div *ngIf="dealsService.isLoading$ | async">Loading deals...</div>
 <div class="container" *ngFor="let deal of dealsService.getDeals() | async">

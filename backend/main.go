@@ -7,7 +7,6 @@ import (
 
 	"deals/database"
 	"deals/environment"
-	"deals/location"
 	"deals/logging"
 	"deals/views"
 )
@@ -39,8 +38,8 @@ func main() {
 		fmt.Println("No port environment variable set, defaulting to 8000")
 		port = "8000" // Provide a default value if no environment variable is set
 	}
-	address := location.GetLocationFor(39.148, -76.73)
-	fmt.Printf("address is %v", address)
+	// address := location.GetLocationFor(39.148, -76.73)
+	// fmt.Printf("address is %v", address)
 
 	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)

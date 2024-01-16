@@ -38,7 +38,9 @@ func GetLocationFor(lat float64, lon float64) string {
 	firstAddress := ""
 	for _, result := range resp {
 		fmt.Println(result.FormattedAddress)
-		firstAddress = result.FormattedAddress
+		if firstAddress == "" {
+			firstAddress = result.FormattedAddress
+		}
 	}
 	return firstAddress
 }
