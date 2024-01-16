@@ -28,7 +28,7 @@ export class DealFormComponent {
   onSubmit() {
     if (this.dealForm.valid) {
       console.log(this.dealForm.value);
-      if (this.dealForm.controls.storeName.value && this.dealForm.controls.itemName.value) {
+      if (this.dealForm.controls.storeName.value && this.dealForm.controls.itemName.value && this.dealForm.controls.address.value) {
         this.dealsService.addDeal({
           RetailPrice: Number(this.dealForm.controls.retailPrice.value),
           ActualPrice: Number(this.dealForm.controls.actualPrice.value),
@@ -40,7 +40,7 @@ export class DealFormComponent {
           Upvotes: 0, // authoritative
           ID: 0, // authoritative
           User: { ID: 0 },
-        })
+        }, this.dealForm.controls.address.value)
       } else {
         console.log('storeName and itemName are required');
       }

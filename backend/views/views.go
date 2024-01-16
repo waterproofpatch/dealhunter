@@ -235,9 +235,13 @@ func GetDeals(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateDeal(w http.ResponseWriter, r *http.Request) {
+	address := r.URL.Query().Get("address")
 	token, _ := r.Context().Value("token").(jwt.MapClaims)
 	var deal models.Deal
 	_ = json.NewDecoder(r.Body).Decode(&deal)
+
+	logging.GetLogger().Debug().Msgf("Address is %v", address)
+	lat, lon := location.GetLatLonFor(address)
 
 	// Assign the deal's user to the user from token["id"]
 	tokenUserId, err := strconv.ParseInt(token["id"].(string), 10, 32)
@@ -248,6 +252,10 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	deal.UserID = uint(tokenUserId)
 
 	logging.GetLogger().Debug().Msgf("Adding deal for user %d (%s)", deal.UserID, token["email"])
+
+	// use converted address lat/lon for deal
+	deal.Location.Latitude = lat
+	deal.Location.Longitude = lon
 
 	// Check if creating the deal fails
 	result := database.GetDb().Create(&deal)

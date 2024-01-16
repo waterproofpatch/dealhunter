@@ -22,8 +22,8 @@ export class DealsService extends BaseHttpService {
     })
   }
 
-  public addDeal(deal: Deal) {
-    this.withLoading(this.createDealHttp(deal)).subscribe((deals: Deal[]) => {
+  public addDeal(deal: Deal, address: string) {
+    this.withLoading(this.createDealHttp(deal, address)).subscribe((deals: Deal[]) => {
       this.deals$.next(deals);
     });
   }
@@ -55,10 +55,10 @@ export class DealsService extends BaseHttpService {
     return this.http.get(`${this.apiUrl}/deals`);
   }
 
-  private createDealHttp(deal: Deal): Observable<any> {
+  private createDealHttp(deal: Deal, address: string): Observable<any> {
     /* fill in location */
     deal.Location = this.locationService.location
-    return this.http.post(`${this.apiUrl}/deals`, deal);
+    return this.http.post(`${this.apiUrl}/deals?address=${address}`, deal);
   }
   private downvoteDealHttp(deal: Deal): Observable<any> {
     return this.http.put(`${this.apiUrl}/deals/${deal.ID}?vote=down`, {});
