@@ -206,7 +206,7 @@ func GetAddress(w http.ResponseWriter, r *http.Request) {
 	lat = float64(int(lat*100)) / 100
 	lon = float64(int(lon*100)) / 100
 
-	address := location.GetLocationFor(lat, lon)
+	address := location.GetAddressFor(lat, lon)
 	response := models.Address{
 		Address: address,
 	}

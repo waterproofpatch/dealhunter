@@ -7,6 +7,13 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+type AddressCache struct {
+	gorm.Model
+	Address   string
+	Latitude  float64
+	Longitude float64
+}
+
 type Location struct {
 	gorm.Model
 	Longitude float64

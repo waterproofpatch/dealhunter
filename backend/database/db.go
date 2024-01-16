@@ -57,6 +57,7 @@ func migrate(db *gorm.DB) {
 	db.AutoMigrate(&models.Location{})
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Vote{})
+	db.AutoMigrate(&models.AddressCache{})
 }
 
 func addDefaultUser(db *gorm.DB) error {

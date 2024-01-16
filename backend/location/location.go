@@ -5,14 +5,51 @@ import (
 	"fmt"
 	"log"
 
+	"deals/database"
 	"deals/environment"
+	"deals/logging"
+	"deals/models"
 
+	"github.com/jinzhu/gorm"
 	"googlemaps.github.io/maps"
 )
 
+// try and get a cached location so we don't query google
+// return "" on cache miss
+func getAddressForFromCache(lat float64, lon float64) string {
+	var addressCache models.AddressCache
+	if err := database.GetDb().First(&addressCache, "latitude = ? AND longitude = ?", lat, lon).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return ""
+		}
+		logging.GetLogger().Debug().Msgf("Error querying the database: %v", err)
+		return ""
+	}
+	return addressCache.Address
+}
+
+// try and get a cached lat, lon so we don't query google.
+// return 0, 0 on cache miss.
+func getLatLonForFromCache(address string) (float64, float64) {
+	var addressCache models.AddressCache
+	if err := database.GetDb().First(&addressCache, "address = ?", address).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return 0, 0
+		}
+		logging.GetLogger().Debug().Msgf("Error querying the database: %v", err)
+		return 0, 0
+	}
+	return addressCache.Latitude, addressCache.Longitude
+}
+
 func GetLatLonFor(address string) (float64, float64) {
 	// temp quota
-	return -1, -1
+	lat, lon := getLatLonForFromCache(address)
+	if lat != -1 && lon != -1 {
+		logging.GetLogger().Debug().Msgf("returning lat, lon %v, %v from cache.", lat, lon)
+		return lat, lon
+	}
+
 	// Create a new client with your API key
 	ctx := context.Background()
 	// Create a context with a cancel function
@@ -30,7 +67,9 @@ func GetLatLonFor(address string) (float64, float64) {
 	}
 	resp, err := c.Geocode(ctx, r)
 	if err != nil {
-		log.Fatalf("fatal error: %s", err)
+		// possible quota issue
+		logging.GetLogger().Debug().Msgf("fatal error: %s", err)
+		return 0, 0
 	}
 
 	// Check if the response is not empty
@@ -44,8 +83,12 @@ func GetLatLonFor(address string) (float64, float64) {
 	return 0, 0
 }
 
-func GetLocationFor(lat float64, lon float64) string {
-	return "OVER QUOTA"
+func GetAddressFor(lat float64, lon float64) string {
+	cachedAddress := getAddressForFromCache(lat, lon)
+	if cachedAddress != "" {
+		logging.GetLogger().Debug().Msgf("returning location %v from cache.", cachedAddress)
+		return cachedAddress
+	}
 	// Create a new client with your API key
 	ctx := context.Background()
 	// Create a context with a cancel function
@@ -66,10 +109,11 @@ func GetLocationFor(lat float64, lon float64) string {
 	}
 	resp, err := c.ReverseGeocode(ctx, r)
 	if err != nil {
-		log.Fatalf("fatal error: %s", err)
+		logging.GetLogger().Debug().Msgf("fatal error: %s", err)
+		return "over_quota"
 	}
 
-	// Print the results
+	// TODO someday return all candidates and let the user choose
 	firstAddress := ""
 	for _, result := range resp {
 		fmt.Println(result.FormattedAddress)
