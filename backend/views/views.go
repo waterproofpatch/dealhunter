@@ -208,9 +208,14 @@ func GetAddress(w http.ResponseWriter, r *http.Request) {
 	lon, err := strconv.ParseFloat(lonStr, 64)
 	if err != nil {
 		logging.GetLogger().Error().Msgf("Error converting longitude to float64: %v", err)
-		http.Error(w, "Error converting latitude to float64 ", http.StatusInternalServerError)
+		http.Error(w, "Error converting longitude to float64 ", http.StatusInternalServerError)
 		return
 	}
+
+	// Truncate the latitude and longitude to 2 decimal places
+	lat = float64(int(lat*100)) / 100
+	lon = float64(int(lon*100)) / 100
+
 	address := location.GetLocationFor(lat, lon)
 	response := models.Address{
 		Address: address,
