@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TruncatePipe implements PipeTransform {
 
 	transform(value: number): number {
-		return parseFloat(value.toFixed(3));
+		return parseFloat(value.toFixed(2));
 	}
 
 }
