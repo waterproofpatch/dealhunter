@@ -19,7 +19,17 @@ export class LocationService extends BaseHttpService {
     this.getLocation()
   }
 
-  private getLocation(): boolean {
+  /**
+   * called to update the location
+   */
+  public refreshLocation(): void {
+    this.getLocation()
+  }
+
+  /**
+   * get location from the browser and request backend convert it to an address
+   */
+  private getLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const longitude = position.coords.longitude;
@@ -27,12 +37,10 @@ export class LocationService extends BaseHttpService {
         this.location.Longitude = longitude;
         this.location.Latitude = latitude;
         this.getAddress(this.location)
-        return true
       });
     } else {
       console.log('No support for geolocation');
     }
-    return false
   }
 
   private toRadians(degrees: number): number {

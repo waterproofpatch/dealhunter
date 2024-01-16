@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DealsService } from '../deals.service';
 import { LocationService } from '../location.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-deal-form',
   templateUrl: './deal-form.component.html',
   styleUrl: './deal-form.component.css',
 })
-export class DealFormComponent {
+export class DealFormComponent implements OnInit {
   dealForm = new FormGroup({
     retailPrice: new FormControl('', Validators.required),
     actualPrice: new FormControl('', Validators.required),
@@ -17,12 +18,26 @@ export class DealFormComponent {
     itemName: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
   });
+  private subscription: Subscription = new Subscription;
 
   constructor(
     private dealsService: DealsService,
     private router: Router,
     public locationService: LocationService) {
 
+  }
+
+  ngOnInit(): void {
+    console.log("Requesting location update...")
+    this.subscription = this.locationService.address$.subscribe(address => {
+      this.dealForm.controls.address.setValue(address);
+    });
+    this.locationService.refreshLocation()
+  }
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   onSubmit() {
