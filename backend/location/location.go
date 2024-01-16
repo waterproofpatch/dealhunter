@@ -76,6 +76,7 @@ func GetLatLonFor(address string) (float64, float64) {
 	if len(resp) > 0 {
 		lat := resp[0].Geometry.Location.Lat
 		lng := resp[0].Geometry.Location.Lng
+		makeAddressCacheEntry(lat, lng, address)
 		return lat, lng
 	}
 
@@ -100,6 +101,8 @@ func GetAddressFor(lat float64, lon float64) string {
 		log.Fatalf("fatal error: %s", err)
 	}
 
+	logging.GetLogger().Debug().Msgf("Getting address for lat=%v, lon=%v", lat, lon)
+
 	// Reverse geocode a latitude and longitude
 	r := &maps.GeocodingRequest{
 		LatLng: &maps.LatLng{
@@ -121,5 +124,17 @@ func GetAddressFor(lat float64, lon float64) string {
 			firstAddress = result.FormattedAddress
 		}
 	}
+
+	// make a cache entry
+	makeAddressCacheEntry(lat, lon, firstAddress)
 	return firstAddress
+}
+
+func makeAddressCacheEntry(lat float64, lon float64, address string) {
+	var addressCacheEntry models.AddressCache
+	addressCacheEntry.Address = address
+	addressCacheEntry.Latitude = lat
+	addressCacheEntry.Longitude = lon
+	logging.GetLogger().Debug().Msgf("Adding cache entry %v", addressCacheEntry)
+	database.GetDb().Save(&addressCacheEntry)
 }
