@@ -35,7 +35,7 @@ export class AuthInterceptor implements HttpInterceptor {
           } else {
             // something wrong with refresh token, need to force user to 
             // reauth
-            this.authenticationService.signOut()
+            // this.authenticationService.signOut()
             return throwError(error);
           }
         })
