@@ -22,16 +22,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type SignUpRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
-type SignInRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 // init views handle to the db
 func Init() (*http.Handler, *mux.Router) {
 	r := mux.NewRouter()
@@ -58,7 +48,7 @@ func Init() (*http.Handler, *mux.Router) {
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
-	var req SignUpRequest
+	var req models.SignUpRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -111,7 +101,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
-	var req SignInRequest
+	var req models.SignInRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -222,8 +212,6 @@ func GetAddress(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(response)
 }
-
-// Convert the response object to JSON and write it to the response writer
 
 func GetDeals(w http.ResponseWriter, r *http.Request) {
 	var deals []models.Deal
