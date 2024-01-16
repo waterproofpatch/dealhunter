@@ -22,7 +22,7 @@ type Location struct {
 
 type Deal struct {
 	gorm.Model
-	Location       Location `gorm:"foreignkey:LocationID"`
+	Location       Location `gorm:"foreignkey:LocationID;constraint:OnDelete:CASCADE;"`
 	LocationID     uint
 	User           User `gorm:"foreignkey:UserID"` // Add this line
 	UserID         uint // Add this line
@@ -32,6 +32,7 @@ type Deal struct {
 	ItemName       string
 	Upvotes        int
 	LastUpvoteTime time.Time
+	Votes          []Vote `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 type User struct {
