@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DealsService } from '../deals.service';
+import { LocationService } from '../location.service';
 
 @Component({
   selector: 'app-deal-form',
@@ -14,9 +15,13 @@ export class DealFormComponent {
     actualPrice: new FormControl('', Validators.required),
     storeName: new FormControl('', Validators.required),
     itemName: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required),
   });
 
-  constructor(private dealsService: DealsService, private router: Router) {
+  constructor(
+    private dealsService: DealsService,
+    private router: Router,
+    public locationService: LocationService) {
 
   }
 

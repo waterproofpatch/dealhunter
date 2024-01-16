@@ -19,5 +19,11 @@
 		<input matInput formControlName="itemName" placeholder="Enter item name">
 	</mat-form-field>
 
+	<mat-form-field>
+		<mat-label>Address</mat-label>
+		<input matInput formControlName="address" placeholder="Enter address"
+			[value]="locationService.address$ | async">
+	</mat-form-field>
+
 	<button mat-raised-button color="primary" type="submit" [disabled]="!dealForm.valid">Submit</button>
 </form>
