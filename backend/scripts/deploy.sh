@@ -2,7 +2,7 @@
 GOOS=linux GOARCH=386 go build .
 
 # io error when overwriting in-use file, need smarter staging system
-scp deals dealhunter@ssh-dealhunter.alwaysdata.net:~/deals
+scp deals dealhunter@ssh-dealhunter.alwaysdata.net:~/deals-2
 scp server.crt dealhunter@ssh-dealhunter.alwaysdata.net:~/server.crt
 scp server.key dealhunter@ssh-dealhunter.alwaysdata.net:~/server.key
 
