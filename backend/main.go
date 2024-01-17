@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"deals/database"
 	"deals/environment"
@@ -12,11 +13,18 @@ import (
 	"deals/views"
 )
 
-// curl me like:
-// curl -X POST http://localhost:8000/shutdown
 func shutdown(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Check the Authorization header
+	authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
+	expectedToken := os.Getenv("SHUTDOWN_ACCESS_TOKEN")
+	if authHeader != expectedToken {
+		logging.GetLogger().Debug().Msgf("Invalid token: [%v], expected [%v]", authHeader, expectedToken)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -56,13 +64,11 @@ func main() {
 
 	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)
-	// log.Fatal(http.ListenAndServe(serverAddress, *handler))
-	// log.Fatal(http.ListenAndServeTLS(serverAddress, "server.crt", "server.key", *handler))
 	if os.Getenv("LOCAL_DEV") != "" {
-		log.Println("Starting server in production mode (expect load balanced TLS)...")
+		log.Println("Starting server in production mode (expect local TLS)...")
 		log.Fatal(http.ListenAndServeTLS(serverAddress, "server.crt", "server.key", *handler))
 	} else {
-		log.Println("Starting server in local development mode (local TLS)...")
+		log.Println("Starting server in local development mode (expect load balanced TLS)...")
 		log.Fatal(http.ListenAndServe(serverAddress, *handler))
 	}
 }
