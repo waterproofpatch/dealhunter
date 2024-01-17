@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"deals/database"
 	"deals/environment"
@@ -38,11 +39,16 @@ func main() {
 		fmt.Println("No port environment variable set, defaulting to 8000")
 		port = "8000" // Provide a default value if no environment variable is set
 	}
-	// address := location.GetLocationFor(39.148, -76.73)
-	// fmt.Printf("address is %v", address)
 
 	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)
-	log.Fatal(http.ListenAndServe(serverAddress, *handler))
+	// log.Fatal(http.ListenAndServe(serverAddress, *handler))
 	// log.Fatal(http.ListenAndServeTLS(serverAddress, "server.crt", "server.key", *handler))
+	if os.Getenv("LOCAL_DEV") != "" {
+		log.Println("Starting server in production mode (expect load balanced TLS)...")
+		log.Fatal(http.ListenAndServeTLS(serverAddress, "server.crt", "server.key", *handler))
+	} else {
+		log.Println("Starting server in local development mode (local TLS)...")
+		log.Fatal(http.ListenAndServe(serverAddress, *handler))
+	}
 }
