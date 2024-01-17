@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
               switchMap((token: any) => {
                 console.log(`Issuing re-request for ${req.url}`)
                 const refreshedReq = req.clone({
-                  headers: req.headers.set('Authorization', `Bearer ${token}`),
+                  headers: req.headers.set('Authorization', `Bearer ${this.accessToken}`),
                   withCredentials: true,
                 });
                 return next.handle(refreshedReq);
