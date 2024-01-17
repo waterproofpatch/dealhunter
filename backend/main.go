@@ -12,6 +12,18 @@ import (
 	"deals/views"
 )
 
+// curl me like:
+// curl -X POST http://localhost:8000/shutdown
+func shutdown(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	fmt.Println("Shutdown request received. Shutting down...")
+	os.Exit(0)
+}
+
 func main() {
 	// init logging library first
 	logging.Init()
@@ -32,7 +44,9 @@ func main() {
 	defer database.DeInit()
 
 	// init views with the db
-	handler, _ := views.Init()
+	handler, r := views.Init()
+	// bind shutdown handler
+	r.HandleFunc("/shutdown", shutdown)
 
 	port := environment.GetEnvironment().PORT
 	if port == "" {
