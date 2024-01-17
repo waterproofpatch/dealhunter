@@ -1,5 +1,5 @@
 
 export const environment = {
 	production: true,
-	apiUrl: 'https://dealhunter.alwaysdata.net'
+	apiUrl: 'https://dealhunter.us-east-2.elasticbeanstalk.com/'
 };
