@@ -43,6 +43,6 @@ func main() {
 
 	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)
-	// log.Fatal(http.ListenAndServe(serverAddress, *handler))
-	log.Fatal(http.ListenAndServeTLS(serverAddress, "server.crt", "server.key", *handler))
+	log.Fatal(http.ListenAndServe(serverAddress, *handler))
+	// log.Fatal(http.ListenAndServeTLS(serverAddress, "server.crt", "server.key", *handler))
 }
