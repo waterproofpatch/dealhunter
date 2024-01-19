@@ -2,21 +2,43 @@
   <mat-toolbar-row>
     <span class="logo">DealHuntr</span>
     <span class="spacer"></span>
-    <button mat-button [routerLink]="['/deal-form']" class="toolbar-button">Post New Deal</button>
-    <button mat-button [routerLink]="['/deals']" class="toolbar-button">Deals</button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="toolbar-button">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [routerLink]="['/deal-form']">
+        <mat-icon>post_add</mat-icon>
+        <span>Post New Deal</span>
+      </button>
+      <button mat-menu-item [routerLink]="['/deals']">
+        <mat-icon>local_offer</mat-icon>
+        <span>Deals</span>
+      </button>
+    </mat-menu>
     <span class="spacer"></span>
     <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="toolbar-button">
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #profileMenu="matMenu">
-      <button mat-menu-item [routerLink]="['/profile']" *ngIf="authenticationService.isAuthenticated$ | async"
-        class="toolbar-button">My Profile</button>
+      <button mat-menu-item [routerLink]="['/profile']" *ngIf="authenticationService.isAuthenticated$ | async">
+        <mat-icon>person</mat-icon>
+        <span>My Profile</span>
+      </button>
       <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signup'}"
-        *ngIf="!(authenticationService.isAuthenticated$ | async)" class="toolbar-button">Sign Up</button>
+        *ngIf="!(authenticationService.isAuthenticated$ | async)">
+        <mat-icon>person_add</mat-icon>
+        <span>Sign Up</span>
+      </button>
       <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signin'}"
-        *ngIf="!(authenticationService.isAuthenticated$ | async)" class="toolbar-button">Sign In</button>
+        *ngIf="!(authenticationService.isAuthenticated$ | async)">
+        <mat-icon>login</mat-icon>
+        <span>Sign In</span>
+      </button>
       <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signout'}"
-        *ngIf="(authenticationService.isAuthenticated$ | async)" class="toolbar-button">Sign Out</button>
+        *ngIf="(authenticationService.isAuthenticated$ | async)">
+        <mat-icon>logout</mat-icon>
+        <span>Sign Out</span>
+      </button>
     </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>

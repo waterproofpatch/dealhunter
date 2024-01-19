@@ -1,15 +1,9 @@
-.logo {
-	font-size: 1.5em;
-	font-weight: bold;
-}
-
-.spacer {
-	flex: 1 1 auto;
-}
-
-button {
-	margin-left: 20px;
-	color: white;
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
 }
 
 .footer {
@@ -21,10 +15,47 @@ button {
 }
 
 .container {
-	padding: 20px;
+	padding: 0px;
+}
+
+.logo {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.spacer {
+	flex: 1 1 auto;
+}
+
+button {
+	margin-left: 20px;
+	color: black;
 }
 
 .toolbar-button {
 	color: black;
 	/* Or any color you prefer */
+}
+
+@media screen and (max-width: 600px) {
+	.logo {
+		font-size: 1em;
+	}
+
+	button {
+		margin-left: 10px;
+		font-size: 0.8em;
+	}
+
+	.toolbar-button {
+		font-size: 0.8em;
+	}
+
+	.footer {
+		height: 40px;
+	}
+
+	.container {
+		padding: 10px;
+	}
 }
