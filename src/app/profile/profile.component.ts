@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from '../authentication.service';
+import { LocationService } from '../location.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,7 +9,7 @@ import { AuthenticationService } from '../authentication.service';
 })
 export class ProfileComponent {
 
-  constructor(public authenticationService: AuthenticationService) {
+  constructor(public authenticationService: AuthenticationService, public locationService: LocationService) {
 
   }
 

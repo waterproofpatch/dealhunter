@@ -1,6 +1,3 @@
-<p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
-	{{locationService.location.Longitude | truncate}}. Address: {{locationService.address$ | async}}
-</p>
 <p style="text-align: center;">Distance: {{distanceToDeal}}</p>
 <div style="display: flex; justify-content: center; padding: 2px;">
 	<mat-slider min="0" max="50" thumbLabel [matTooltip]="'Distance to Deal'">
