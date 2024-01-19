@@ -45,7 +45,16 @@ export class DealsService extends BaseHttpService {
     })
   }
 
-  public getDeals() {
+  public getDealsWithin(distanceMiles: number): Observable<Deal[]> {
+    return this.deals$.pipe(
+      map(deals => deals
+        .filter(deal => this.locationService.calculateDistance(deal.Location) <= distanceMiles)
+        .sort((a, b) => this.locationService.calculateDistance(a.Location) - this.locationService.calculateDistance(b.Location))
+      ),
+    );
+  }
+
+  public getDeals(): Observable<Deal[]> {
     return this.deals$.pipe(
       map(deals => deals.sort((a, b) => this.locationService.calculateDistance(a.Location) - this.locationService.calculateDistance(b.Location)))
     );
