@@ -47,8 +47,8 @@
 </mat-toolbar>
 
 <div style="padding: 10px;">
-  <mat-slider [(ngModel)]="sliderValue" min="0" max="50" thumbLabel [matTooltip]="'Distance to Deal'">
-    <input matSliderThumb>
+  <mat-slider min="0" max="50" thumbLabel [matTooltip]="'Distance to Deal'">
+    <input [(ngModel)]="sliderValue" matSliderThumb>
   </mat-slider>
   <p>Distance: {{sliderValue}}</p>
 </div>
