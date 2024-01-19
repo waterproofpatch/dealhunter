@@ -46,6 +46,13 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
+<div style="padding: 10px;">
+  <mat-slider [(ngModel)]="sliderValue" min="0" max="50" thumbLabel [matTooltip]="'Distance to Deal'">
+    <input matSliderThumb>
+  </mat-slider>
+  <p>Distance: {{sliderValue}}</p>
+</div>
+
 <router-outlet></router-outlet>
 <footer class="footer">
   <div class="container">

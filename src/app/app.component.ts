@@ -9,6 +9,7 @@ import { AuthenticationService } from './authentication.service';
 })
 export class AppComponent {
   title = 'deals-app';
+  public sliderValue: number = 0
   constructor(public authenticationService: AuthenticationService) {
   }
 }
