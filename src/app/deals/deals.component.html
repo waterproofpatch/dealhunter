@@ -1,12 +1,13 @@
 <p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
 	{{locationService.location.Longitude | truncate}}. Address: {{locationService.address$ | async}}
 </p>
-<div style="padding: 10px;">
+<p style="text-align: center;">Distance: {{distanceToDeal}}</p>
+<div style="display: flex; justify-content: center; padding: 2px;">
 	<mat-slider min="0" max="50" thumbLabel [matTooltip]="'Distance to Deal'">
 		<input [(ngModel)]="distanceToDeal" matSliderThumb>
 	</mat-slider>
-	<p>Distance: {{distanceToDeal}}</p>
 </div>
+
 
 <div *ngIf="dealsService.isLoading$ | async">Loading deals...</div>
 <div class="container" *ngFor="let deal of dealsService.getDealsWithin(distanceToDeal) | async">
