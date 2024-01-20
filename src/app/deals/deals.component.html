@@ -6,7 +6,7 @@
 </div>
 <mat-form-field style="display: flex; justify-content: center; padding: 2px">
 	<mat-label>Sort By...</mat-label>
-	<mat-select>
+	<mat-select [(value)]="sortOption">
 		<mat-option value="mostRecentlyUpvoted">Most Recently Upvoted</mat-option>
 		<mat-option value="mostRecentlyPosted">Most Recently Posted</mat-option>
 		<mat-option value="distance">Distance, shortest to farthest</mat-option>
@@ -15,6 +15,6 @@
 </mat-form-field>
 
 <div *ngIf="dealsService.isLoading$ | async">Loading deals...</div>
-<div class="container" *ngFor="let deal of dealsService.getDealsWithin(distanceToDeal) | async">
+<div class="container" *ngFor="let deal of dealsService.getDealsWithin(distanceToDeal, sortOption) | async">
 	<app-deal [deal]="deal"></app-deal>
 </div>

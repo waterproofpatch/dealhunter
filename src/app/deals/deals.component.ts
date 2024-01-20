@@ -10,6 +10,7 @@ import { LocationService } from '../location.service';
 })
 export class DealsComponent implements OnInit {
   public distanceToDeal: number = 5
+  public sortOption: string = ""
   constructor(public dealsService: DealsService,
     public locationService: LocationService,
   ) {

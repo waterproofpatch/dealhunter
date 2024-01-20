@@ -45,20 +45,39 @@ export class DealsService extends BaseHttpService {
     })
   }
 
-  public getDealsWithin(distanceMiles: number): Observable<Deal[]> {
-    return this.deals$.pipe(
+  public getDealsWithin(distanceMiles: number, sortOption: string): Observable<Deal[]> {
+    return this.getSortedDeals(sortOption).pipe(
       map(deals => deals
         .filter(deal => this.locationService.calculateDistance(deal.Location) <= distanceMiles)
-        .sort((a, b) => this.locationService.calculateDistance(a.Location) - this.locationService.calculateDistance(b.Location))
       ),
     );
   }
 
-  public getDeals(): Observable<Deal[]> {
+  private getDeals(): Observable<Deal[]> {
     return this.deals$.pipe(
       map(deals => deals.sort((a, b) => this.locationService.calculateDistance(a.Location) - this.locationService.calculateDistance(b.Location)))
     );
   }
+
+  public getSortedDeals(sortOption: string): Observable<Deal[]> {
+    return this.getDeals().pipe(
+      map(deals => {
+        switch (sortOption) {
+          case 'mostRecentlyUpvoted':
+            return deals.sort((a, b) => new Date(b.LastUpvoteTime).getTime() - new Date(a.LastUpvoteTime).getTime());
+          case 'mostRecentlyPosted':
+            return deals.sort((a, b) => new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime());
+          case 'distance':
+            return deals.sort((a, b) => this.locationService.calculateDistance(b.Location) - this.locationService.calculateDistance(a.Location));
+          case 'biggestDiscount':
+            return deals.sort((a, b) => (b.RetailPrice - b.ActualPrice) - (a.RetailPrice - a.ActualPrice));
+          default:
+            return deals;
+        }
+      }),
+    );
+  }
+
 
   private getDealsHttp(): Observable<any> {
     return this.http.get(`${this.apiUrl}/deals`);
