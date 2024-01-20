@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValidationErrors, AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DealsService } from '../deals.service';
 import { LocationService } from '../location.service';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,7 @@ export class DealFormComponent implements OnInit {
     storeName: new FormControl('', Validators.required),
     itemName: new FormControl('', Validators.required),
     address: new FormControl('', Validators.required),
-  });
+  }, { validators: this.priceValidator });
   private subscription: Subscription = new Subscription;
 
   constructor(
@@ -38,6 +38,14 @@ export class DealFormComponent implements OnInit {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  priceValidator(control: AbstractControl): ValidationErrors | null {
+    const group = control as FormGroup;
+    const retailPrice = group.controls['retailPrice'].value;
+    const actualPrice = group.controls['actualPrice'].value;
+
+    return retailPrice > actualPrice ? null : { notValid: true };
   }
 
   onSubmit() {

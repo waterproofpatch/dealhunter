@@ -2,11 +2,17 @@
 	<mat-form-field>
 		<mat-label>Retail Price</mat-label>
 		<input matInput formControlName="retailPrice" type="number" placeholder="Enter retail price in USD">
+		<mat-error *ngIf="dealForm.hasError('notValid')">
+			Retail price must be higher than the actual price.
+		</mat-error>
 	</mat-form-field>
 
 	<mat-form-field>
 		<mat-label>Actual Price</mat-label>
 		<input matInput formControlName="actualPrice" type="number" placeholder="Enter actual price in USD">
+		<mat-error *ngIf="dealForm.hasError('notValid')">
+			Actual price must be lower than the retail price.
+		</mat-error>
 	</mat-form-field>
 
 	<mat-form-field>
