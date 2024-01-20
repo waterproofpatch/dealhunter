@@ -1,7 +1,12 @@
 <mat-card *ngIf="deal" class="deal-card">
 	<mat-card-header>
-		<mat-card-title>{{deal.ID}}: {{ deal.ItemName }} - {{ deal.StoreName }}</mat-card-title>
+		<div class="header-content">
+			<span class="store-name">Store: {{ deal.StoreName }}</span>
+			<span class="item-name">Item: {{ deal.ItemName }}</span>
+		</div>
 	</mat-card-header>
+
+
 	<mat-card-content>
 		<div class="deal-details">
 			<p>Spotted {{secondsSinceCreation}} minutes ago</p>
@@ -16,7 +21,7 @@
 		</div>
 		<div class="deal-prices">
 			<p>Retail Price: {{ deal.RetailPrice }}</p>
-			<p>Actual Price: {{ deal.ActualPrice }}</p>
+			<p style="color: green">Actual Price: {{ deal.ActualPrice }}</p>
 		</div>
 		<p *ngIf="deal.Location" class="deal-location">
 			Address: {{dealAddress}}
