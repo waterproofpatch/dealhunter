@@ -17,18 +17,20 @@ export class DealComponent implements OnInit {
   secondsSinceCreation: number = 0
   secondsSinceLastUpvote: number = 0
   dealAddress: string = "Fetching address..."
+  discountPct: number = 0.0
 
   @Input() deal: Deal | undefined
+
   constructor(
     public locationService: LocationService,
     public dealsService: DealsService,
     public authenticationService: AuthenticationService) {
-
   }
 
   ngOnInit(): void {
     this.getSecondsSinceCreation()
     this.getSecondsSinceLastUpvote()
+    this.getDiscountPct()
     if (this.deal?.Location) {
       this.locationService.getAddressForLocation(this.deal?.Location).subscribe((address: Address) => {
         this.dealAddress = address.Address
@@ -60,6 +62,13 @@ export class DealComponent implements OnInit {
       return
     }
     this.secondsSinceCreation = this.getSecondsSinceDate(this.deal.CreatedAt)
+  }
+
+  private getDiscountPct(): void {
+    if (!this.deal) {
+      return
+    }
+    this.discountPct = ((this.deal?.RetailPrice - this.deal?.ActualPrice) / this.deal.RetailPrice) * 100.0
   }
 
 }

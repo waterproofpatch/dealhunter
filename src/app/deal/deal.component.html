@@ -6,7 +6,6 @@
 		</div>
 	</mat-card-header>
 
-
 	<mat-card-content>
 		<div class="deal-details">
 			<p>Spotted {{secondsSinceCreation}} minutes ago</p>
@@ -21,7 +20,7 @@
 		</div>
 		<div class="deal-prices">
 			<p>Retail Price: {{ deal.RetailPrice }}</p>
-			<p style="color: green">Actual Price: {{ deal.ActualPrice }}</p>
+			<p style="color: green">Actual Price: {{ deal.ActualPrice }} ({{discountPct}}% off)</p>
 		</div>
 		<p *ngIf="deal.Location" class="deal-location">
 			Address: {{dealAddress}}
