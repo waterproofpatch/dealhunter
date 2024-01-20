@@ -233,6 +233,12 @@ func CreateDeal(w http.ResponseWriter, r *http.Request) {
 	var deal models.Deal
 	_ = json.NewDecoder(r.Body).Decode(&deal)
 
+	// Check if ItemName and StoreName are within the length limit
+	if len(deal.ItemName) > 20 || len(deal.StoreName) > 20 {
+		http.Error(w, "ItemName and StoreName must be 20 characters or less", http.StatusBadRequest)
+		return
+	}
+
 	logging.GetLogger().Debug().Msgf("Address is %v", address)
 	lat, lon := location.GetLatLonFor(address)
 
