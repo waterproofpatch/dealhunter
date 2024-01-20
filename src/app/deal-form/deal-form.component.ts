@@ -62,7 +62,7 @@ export class DealFormComponent implements OnInit {
           LastUpvoteTime: "", // authoritative
           Upvotes: 0, // authoritative
           ID: 0, // authoritative
-          User: { ID: 0 },
+          User: { ID: 0, Reputation: 0 }, // authoritative
         }, this.dealForm.controls.address.value)
       } else {
         console.log('storeName and itemName are required');

@@ -26,6 +26,7 @@ import (
 func Init() (*http.Handler, *mux.Router) {
 	r := mux.NewRouter()
 
+	r.HandleFunc("/profile", decorators.LogDecorator(decorators.TokenDecorator(false, GetProfile))).Methods("GET")
 	r.HandleFunc("/address", decorators.LogDecorator(decorators.TokenDecorator(true, GetAddress))).Methods("GET")
 	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(true, GetDeals))).Methods("GET")
 	r.HandleFunc("/deals", decorators.LogDecorator(decorators.TokenDecorator(false, CreateDeal))).Methods("POST")
@@ -183,6 +184,18 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignOut(w http.ResponseWriter, r *http.Request) {
+}
+
+func GetProfile(w http.ResponseWriter, r *http.Request) {
+	token, _ := r.Context().Value("token").(jwt.MapClaims)
+	var user models.User
+	result := database.GetDb().Find(&user).Where("email = ?", token["email"])
+	if result.Error != nil && !errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		// this is probably a programming error at this point
+		http.Error(w, "Failed obtaining profile.", http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(user)
 }
 
 func GetAddress(w http.ResponseWriter, r *http.Request) {
