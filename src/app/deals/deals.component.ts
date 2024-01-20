@@ -9,7 +9,7 @@ import { LocationService } from '../location.service';
   styleUrl: './deals.component.css'
 })
 export class DealsComponent implements OnInit {
-  public distanceToDeal: number = 0
+  public distanceToDeal: number = 5
   constructor(public dealsService: DealsService,
     public locationService: LocationService,
   ) {
