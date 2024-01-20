@@ -59,6 +59,13 @@ export class DealsService extends BaseHttpService {
     );
   }
 
+  public getDealsBelongingTo(id: number): Observable<Deal[]> {
+    return this.getDeals().pipe(
+      map(deals => deals.filter(deal => deal.User.ID == id)
+      ),
+    );
+  }
+
   public getSortedDeals(sortOption: string): Observable<Deal[]> {
     return this.getDeals().pipe(
       map(deals => {

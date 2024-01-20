@@ -1,15 +1,22 @@
-<mat-card class="container" *ngIf="(authenticationService.jwtAccessToken$ | async) as token">
-	<mat-card-header>
-		<mat-card-title>User Profile</mat-card-title>
-	</mat-card-header>
-	<mat-card-content>
-		<p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
-			{{locationService.location.Longitude | truncate}}. Address: {{locationService.address$ | async}}
-		</p>
-		<p><strong>Reputation: {{(profileService.user$ | async)?.Reputation}}</strong></p>
-		<p><strong>Email:</strong> {{token.email}}</p>
-		<p><strong>ID:</strong> {{token.id}}</p>
-		<p><strong>Expired:</strong> {{token.isExpired()}}</p>
-		<p><strong>Expires in:</strong> {{token.secondsUntilExpiration()}} seconds</p>
-	</mat-card-content>
-</mat-card>
+<div *ngIf="(authenticationService.jwtAccessToken$ | async) as token">
+	<mat-card class="container">
+		<mat-card-header>
+			<mat-card-title>User Profile</mat-card-title>
+		</mat-card-header>
+		<mat-card-content>
+			<p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
+				{{locationService.location.Longitude | truncate}}. Address: {{locationService.address$ |
+				async}}
+			</p>
+			<p><strong>Reputation: {{(profileService.user$ | async)?.Reputation}}</strong></p>
+			<p><strong>Email:</strong> {{token.email}}</p>
+			<p><strong>ID:</strong> {{token.id}}</p>
+			<p><strong>Expired:</strong> {{token.isExpired()}}</p>
+			<p><strong>Expires in:</strong> {{token.secondsUntilExpiration()}} seconds</p>
+		</mat-card-content>
+	</mat-card>
+	<div *ngIf="dealsService.isLoading$ | async">Loading deals...</div>
+	<div class="container" *ngFor="let deal of dealsService.getDealsBelongingTo(token.id) | async">
+		<app-deal [deal]="deal"></app-deal>
+	</div>
+</div>
