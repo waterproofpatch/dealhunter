@@ -21,7 +21,9 @@ openssl req -new -x509 -sha256 -key client.key -out client.crt -days 3650
 ```bash
 cd backend
 go mod tidy
-go run main.go
+# go run main.go
+air init
+air
 ```
 
 ### Frontend
