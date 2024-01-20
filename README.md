@@ -27,6 +27,8 @@ go run main.go
 ### Frontend
 
 ```bash
+cd frontend
+npm install
 ng serve --configuration development --port 4300
 ```
 
