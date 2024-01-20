@@ -71,6 +71,8 @@ export class DealsService extends BaseHttpService {
             return deals.sort((a, b) => this.locationService.calculateDistance(b.Location) - this.locationService.calculateDistance(a.Location));
           case 'biggestDiscount':
             return deals.sort((a, b) => (b.RetailPrice - b.ActualPrice) - (a.RetailPrice - a.ActualPrice));
+          case 'mostUpvoted':
+            return deals.sort((a, b) => b.Upvotes - a.Upvotes);
           default:
             return deals;
         }
