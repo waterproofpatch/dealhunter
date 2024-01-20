@@ -1,6 +1,8 @@
 # DealsApp
 
-## Generate Keys
+## Setup
+
+### Generate Keys
 
 ```bash
 cd backend
@@ -32,15 +34,17 @@ ng serve --configuration development --port 4300
 
 ## Backend
 
-Deployed to alwaysdata.
+Deployed to alwaysdata. This is a manual process for now.
 
 ```bash
 bash backend/scripts/deploy.sh
 ```
 
+... followed by manual process on alwaysdata.
+
 ## Frontend
 
-Deployed to Amazon Amplify.
+Deployed to Amazon Amplify:
 
 ```bash
 git checkout master
