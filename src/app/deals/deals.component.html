@@ -1,12 +1,12 @@
 <p style="text-align: center;">Radius: {{distanceToDeal}} miles</p>
 <div style="display: flex; justify-content: center; padding: 2px;">
 	<mat-slider min="0" max="50" thumbLabel [matTooltip]="'Distance to Deal'">
-		<input [(ngModel)]="distanceToDeal" matSliderThumb>
+		<input (valueChange)="saveDistanceOption($event)" [(ngModel)]="distanceToDeal" matSliderThumb>
 	</mat-slider>
 </div>
 <mat-form-field style="display: flex; justify-content: center; padding: 2px">
 	<mat-label>Sort By...</mat-label>
-	<mat-select [(value)]="sortOption">
+	<mat-select [(value)]="sortOption" (selectionChange)="saveSortOption($event)">
 		<mat-option value="mostUpvoted">Most Upvoted</mat-option>
 		<mat-option value="mostRecentlyUpvoted">Most Recently Upvoted</mat-option>
 		<mat-option value="mostRecentlyPosted">Most Recently Posted</mat-option>
