@@ -13,6 +13,8 @@ import { AuthenticationService } from '../authentication.service';
   styleUrl: './deal.component.css'
 })
 export class DealComponent implements OnInit {
+  secondsSinceCreation: number = 0
+  secondsSinceLastUpvote: number = 0
 
   @Input() deal: Deal | undefined
   constructor(
@@ -23,6 +25,8 @@ export class DealComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getSecondsSinceCreation()
+    this.getSecondsSinceLastUpvote()
   }
 
   public getSecondsSinceDate(dateString: string): number {
@@ -37,18 +41,18 @@ export class DealComponent implements OnInit {
     return diffInMinutes
   }
 
-  public getSecondsSinceLastUpvote(): number {
+  private getSecondsSinceLastUpvote(): void {
     if (!this.deal) {
-      return 0
+      return
     }
-    return this.getSecondsSinceDate(this.deal.LastUpvoteTime)
+    this.secondsSinceLastUpvote = this.getSecondsSinceDate(this.deal.LastUpvoteTime)
   }
 
-  public getSecondsSinceCreation(): number {
+  private getSecondsSinceCreation(): void {
     if (!this.deal) {
-      return 0
+      return
     }
-    return this.getSecondsSinceDate(this.deal.CreatedAt)
+    this.secondsSinceCreation = this.getSecondsSinceDate(this.deal.CreatedAt)
   }
 
 }
