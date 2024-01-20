@@ -6,6 +6,7 @@
 		<p>Your location - latitude: {{locationService.location.Latitude | truncate }}, longitude:
 			{{locationService.location.Longitude | truncate}}. Address: {{locationService.address$ | async}}
 		</p>
+		<p><strong>Reputation: {{(profileService.user$ | async)?.Reputation}}</strong></p>
 		<p><strong>Email:</strong> {{token.email}}</p>
 		<p><strong>ID:</strong> {{token.id}}</p>
 		<p><strong>Expired:</strong> {{token.isExpired()}}</p>
