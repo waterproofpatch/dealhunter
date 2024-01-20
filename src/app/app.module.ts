@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider'
+import { MatSelectModule } from '@angular/material/select'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -53,6 +54,7 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
     MatSliderModule,
     MatTooltipModule,
     MatDialogModule,
+    MatSelectModule,
     BrowserAnimationsModule
   ],
   providers: [
