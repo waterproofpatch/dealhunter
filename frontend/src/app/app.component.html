@@ -1,0 +1,48 @@
+<mat-toolbar color="primary" class="toolbar">
+  <mat-toolbar-row>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <!-- <img src="assets/logo1.jpeg" alt="DealHuntr Icon" style="height: 50px; margin-right: 8px;"> -->
+      <span class="logo">DealHuntr</span>
+    </div>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="toolbar-button">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [routerLink]="['/deal-form']">
+        <mat-icon>post_add</mat-icon>
+        <span>Post New Deal</span>
+      </button>
+      <button mat-menu-item [routerLink]="['/deals']">
+        <mat-icon>local_offer</mat-icon>
+        <span>Deals</span>
+      </button>
+    </mat-menu>
+    <span class="spacer"></span>
+    <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="toolbar-button">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item [routerLink]="['/profile']" *ngIf="authenticationService.isAuthenticated$ | async">
+        <mat-icon>person</mat-icon>
+        <span>My Profile</span>
+      </button>
+      <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signup'}"
+        *ngIf="!(authenticationService.isAuthenticated$ | async)">
+        <mat-icon>person_add</mat-icon>
+        <span>Sign Up</span>
+      </button>
+      <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signin'}"
+        *ngIf="!(authenticationService.isAuthenticated$ | async)">
+        <mat-icon>login</mat-icon>
+        <span>Sign In</span>
+      </button>
+      <button mat-menu-item [routerLink]="['/authentication']" [queryParams]="{mode: 'signout'}"
+        *ngIf="(authenticationService.isAuthenticated$ | async)">
+        <mat-icon>logout</mat-icon>
+        <span>Sign Out</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,21 @@
+<p style="text-align: center;">Radius: {{distanceToDeal}} miles</p>
+<div style="display: flex; justify-content: center; padding: 2px;">
+	<mat-slider min="0" max="50" thumbLabel [matTooltip]="'Distance to Deal'">
+		<input (valueChange)="saveDistanceOption($event)" [(ngModel)]="distanceToDeal" matSliderThumb>
+	</mat-slider>
+</div>
+<mat-form-field style="display: flex; justify-content: center; padding: 2px">
+	<mat-label>Sort By...</mat-label>
+	<mat-select [(value)]="sortOption" (selectionChange)="saveSortOption($event)">
+		<mat-option value="mostUpvoted">Most Upvoted</mat-option>
+		<mat-option value="mostRecentlyUpvoted">Most Recently Upvoted</mat-option>
+		<mat-option value="mostRecentlyPosted">Most Recently Posted</mat-option>
+		<mat-option value="distance">Distance, shortest to farthest</mat-option>
+		<mat-option value="biggestDiscount">Biggest Discount</mat-option>
+	</mat-select>
+</mat-form-field>
+
+<div *ngIf="dealsService.isLoading$ | async">Loading deals...</div>
+<div class="container" *ngFor="let deal of dealsService.getDealsWithin(distanceToDeal, sortOption) | async">
+	<app-deal [deal]="deal"></app-deal>
+</div>

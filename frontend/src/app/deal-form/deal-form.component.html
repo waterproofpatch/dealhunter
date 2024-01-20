@@ -1,0 +1,34 @@
+<form [formGroup]="dealForm" (ngSubmit)="onSubmit()" class="deal-form">
+	<mat-form-field>
+		<mat-label>Retail Price</mat-label>
+		<input matInput formControlName="retailPrice" type="number" placeholder="Enter retail price in USD">
+		<mat-error *ngIf="dealForm.hasError('notValid')">
+			Retail price must be higher than the actual price.
+		</mat-error>
+	</mat-form-field>
+
+	<mat-form-field>
+		<mat-label>Actual Price</mat-label>
+		<input matInput formControlName="actualPrice" type="number" placeholder="Enter actual price in USD">
+		<mat-error *ngIf="dealForm.hasError('notValid')">
+			Actual price must be lower than the retail price.
+		</mat-error>
+	</mat-form-field>
+
+	<mat-form-field>
+		<mat-label>Store Name</mat-label>
+		<input matInput formControlName="storeName" placeholder="Enter store name">
+	</mat-form-field>
+
+	<mat-form-field>
+		<mat-label>Item Name</mat-label>
+		<input matInput formControlName="itemName" placeholder="Enter item name">
+	</mat-form-field>
+
+	<mat-form-field>
+		<mat-label>Address</mat-label>
+		<input matInput formControlName="address" placeholder="Enter address">
+	</mat-form-field>
+
+	<button mat-raised-button color="primary" type="submit" [disabled]="!dealForm.valid">Submit</button>
+</form>

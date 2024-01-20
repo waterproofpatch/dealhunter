@@ -1,0 +1,9 @@
+mat-form-field {
+	display: flex;
+	flex-direction: column;
+}
+
+.deal-form mat-form-field {
+	display: flex;
+	flex-direction: column;
+}
