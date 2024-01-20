@@ -5,13 +5,13 @@
 	<mat-card-content>
 		<div class="deal-details">
 			<p>Spotted {{secondsSinceCreation}} minutes ago</p>
+			<p *ngIf="deal.Upvotes >0">Last Upvoted {{secondsSinceLastUpvote}} minutes ago</p>
 			<div *ngIf="(authenticationService.isAuthenticated$ | async)" class="deal-actions">
 				<mat-icon (click)="dealsService.downvoteDeal(deal)">thumb_down</mat-icon>
 				<mat-icon (click)="dealsService.upvoteDeal(deal)">thumb_up</mat-icon>
 				<mat-icon *ngIf="deal.User.ID == (authenticationService.userId$ | async)"
 					(click)="dealsService.deleteDeal(deal)">delete</mat-icon>
 				{{ deal.Upvotes }}
-				<span *ngIf="deal.Upvotes > 0">({{secondsSinceLastUpvote}} minutes ago)</span>
 			</div>
 		</div>
 		<div class="deal-prices">
