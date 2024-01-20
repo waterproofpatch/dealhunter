@@ -7,6 +7,7 @@ import { Deal } from '../models/deal';
 import { LocationService } from '../location.service';
 import { DealsService } from '../deals.service';
 import { AuthenticationService } from '../authentication.service';
+import { Address } from '../models/address';
 @Component({
   selector: 'app-deal',
   templateUrl: './deal.component.html',
@@ -15,6 +16,7 @@ import { AuthenticationService } from '../authentication.service';
 export class DealComponent implements OnInit {
   secondsSinceCreation: number = 0
   secondsSinceLastUpvote: number = 0
+  dealAddress: string = "Fetching address..."
 
   @Input() deal: Deal | undefined
   constructor(
@@ -27,6 +29,11 @@ export class DealComponent implements OnInit {
   ngOnInit(): void {
     this.getSecondsSinceCreation()
     this.getSecondsSinceLastUpvote()
+    if (this.deal?.Location) {
+      this.locationService.getAddressForLocation(this.deal?.Location).subscribe((address: Address) => {
+        this.dealAddress = address.Address
+      })
+    }
   }
 
   public getSecondsSinceDate(dateString: string): number {

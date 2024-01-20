@@ -18,10 +18,13 @@
 			<p>Retail Price: {{ deal.RetailPrice }}</p>
 			<p>Actual Price: {{ deal.ActualPrice }}</p>
 		</div>
-		<p *ngIf="deal.Location" class="deal-location">Location - Lat: {{ deal.Location.Latitude | truncate }},
+		<p *ngIf="deal.Location" class="deal-location">
+			Address: {{dealAddress}}
+			<!-- Location - Lat: {{ deal.Location.Latitude | truncate }},
 			Lon: {{
 			deal.Location.Longitude | truncate
-			}}
-			({{locationService.calculateDistance(deal.Location) | truncate }} miles away)</p>
+			}} -->
+			({{locationService.calculateDistance(deal.Location) | truncate }} miles away)
+		</p>
 	</mat-card-content>
 </mat-card>

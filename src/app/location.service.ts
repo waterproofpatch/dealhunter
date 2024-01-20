@@ -77,10 +77,14 @@ export class LocationService extends BaseHttpService {
    * given lat/lon, get the address right now
    */
   private getAddress(location: Location): void {
-    this.getAddressHttp(location.Latitude, location.Longitude).subscribe((address: Address) => {
+    this.getAddressForLocation(location).subscribe((address: Address) => {
       console.log(`Address is ${address.Address}`)
       this.address$.next(address.Address)
     });
+  }
+
+  public getAddressForLocation(location: Location): Observable<any> {
+    return this.getAddressHttp(location.Latitude, location.Longitude)
   }
 
   private getAddressHttp(lat: number, lon: number): Observable<any> {
