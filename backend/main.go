@@ -65,10 +65,10 @@ func main() {
 	serverAddress := ":" + port
 	log.Printf("Server starting on %s\n", serverAddress)
 	if os.Getenv("LOCAL_DEV") != "" {
-		log.Println("Starting server in production mode (expect local TLS)...")
+		log.Println("Starting server in development mode (expect local TLS)...")
 		log.Fatal(http.ListenAndServeTLS(serverAddress, "server.crt", "server.key", *handler))
 	} else {
-		log.Println("Starting server in local development mode (expect load balanced TLS)...")
+		log.Println("Starting server in production mode (expect load balanced TLS)...")
 		log.Fatal(http.ListenAndServe(serverAddress, *handler))
 	}
 }

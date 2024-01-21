@@ -1,11 +1,13 @@
 # Run from the dir containing main.go
 GOOS=linux GOARCH=386 go build .
 
-# io error when overwriting in-use file, need smarter staging system
-scp scripts/shutdown.sh dealhunter@ssh-dealhunter.alwaysdata.net:~/shutdown.sh
-echo "Running shutdown..."
-ssh dealhunter@ssh-dealhunter.alwaysdata.net 'bash ~/shutdown.sh'
-echo "Ran shutdown..."
-scp deals dealhunter@ssh-dealhunter.alwaysdata.net:~/deals-2
+echo "Uploading manager script..."
+# don't override running file, causes IO errors - just did his once
+#scp scripts/manager.sh dealhunter@ssh-dealhunter.alwaysdata.net:~/manager2.sh
 
-curl -X POST --basic --user "$APIKEY account=dealhunter:" https://api.alwaysdata.com/v1/site/dealhunter/restart/
+# uploading binary to staging
+echo "Uploading binary..."
+scp deals dealhunter@ssh-dealhunter.alwaysdata.net:~/deals-staging
+
+# Can't get this to work
+curl -X POST --basic --user "$API_KEY account=dealhunter:" https://api.alwaysdata.com/v1/site/dealhunter/restart/

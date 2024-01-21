@@ -2,3 +2,4 @@
 *.key
 *.env
 backend/tmp/main
+backend/deals
