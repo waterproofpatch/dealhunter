@@ -14,6 +14,7 @@ import (
 )
 
 func shutdown(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("Handling shutdown request... %v\n", r)
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
@@ -33,6 +34,7 @@ func shutdown(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	fmt.Printf("Starting up...\n")
 	// init logging library first
 	logging.Init()
 
